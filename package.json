@@ -1,0 +1,24 @@
+{
+  "name": "nachos-shell",
+  "version": "0.0.0",
+  "description": "The main nachos shell",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nachos/nachos-shell"
+  },
+  "keywords": [
+    "nachos",
+    "desktop",
+	"shell"
+  ],
+  "author": "Nachos team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nachos/nachos-shell/issues"
+  },
+  "homepage": "https://github.com/nachos/nachos-shell"
+}
