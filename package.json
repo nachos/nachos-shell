@@ -2,7 +2,6 @@
   "name": "nachos-shell",
   "version": "0.0.0",
   "description": "The main nachos shell",
-  "main": "index.js",
   "scripts": {
     "test": "gulp test"
   },
@@ -13,12 +12,27 @@
   "keywords": [
     "nachos",
     "desktop",
-	"shell"
+    "shell"
   ],
   "author": "Nachos team",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/nachos/nachos-shell/issues"
   },
-  "homepage": "https://github.com/nachos/nachos-shell"
+  "homepage": "https://github.com/nachos/nachos-shell",
+  "devDependencies": {
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-inject": "^1.2.0",
+    "gulp-jshint": "^1.9.2",
+    "gulp-less": "^3.0.1",
+    "gulp-util": "^3.0.4",
+    "jshint-stylish": "^1.0.1",
+    "lazypipe": "^0.2.2",
+    "run-sequence": "^1.0.2",
+    "wiredep": "^2.2.2"
+  },
+  "dependencies": {
+    "nw": "^0.12.0-rc1"
+  }
 }
