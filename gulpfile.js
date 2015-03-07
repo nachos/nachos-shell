@@ -65,7 +65,10 @@ gulp.task('wiredep', function () {
 });
 
 gulp.task('less', ['inject:less'], function () {
-  return gulp.src('client/app/app.less')
+  return gulp.src([
+      'client/app/app.less',
+      'client/dips/**/*.less'
+    ])
     .pipe(less({
       paths: [
         'client/bower_components',
