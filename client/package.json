@@ -9,7 +9,7 @@
     "position": "center",
     "fullscreen": true,
     "resizable": false,
-    "transparent": false
+    "transparent": true
   }
 }
 
