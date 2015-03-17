@@ -67,7 +67,7 @@ gulp.task('wiredep', function () {
 gulp.task('less', ['inject:less'], function () {
   return gulp.src([
       'client/app/app.less',
-      'client/dips/**/*.less'
+      'client/app/**/*.less'
     ])
     .pipe(less({
       paths: [
@@ -82,8 +82,7 @@ gulp.task('less', ['inject:less'], function () {
 gulp.task('inject:less', function () {
   return gulp.src('client/app/app.less')
     .pipe(inject(gulp.src([
-      'client/{app,components}/**/*.less',
-      '!client/app/app.less'
+      'client/{app,components}/**/*.less'
     ], {read: false}), {
       transform: function (filePath) {
         filePath = filePath.replace('/client/app/', '');
