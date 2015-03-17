@@ -24,16 +24,17 @@ var setIframe = function (iframe) {
 
 var typeHandlers = {};
 
-typeHandlers['background'] = function (basePath, config) {
+typeHandlers.background = function (basePath, config) {
   var frame = getIframe(basePath, config);
   document.body.appendChild(frame);
   setIframe(frame);
 };
-
-typeHandlers['widget'] = function (basePath, config) {
+/*
+typeHandlers.widget = function (basePath, config) {
   var frame = getIframe(basePath, config);
-  //setIframe(frame);
-};
+  // TODO: Add to grid system
+  setIframe(frame);
+};*/
 
 
 
