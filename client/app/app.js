@@ -5,19 +5,28 @@ var _ = require('lodash');
 var getIframe = function (basePath, config) {
   var mainPath = path.resolve(basePath, config.main);
 
-  var frame = document.createElement("IFRAME");
-  frame.setAttribute('seamless', null);
-  frame.setAttribute('src', mainPath);
-  frame.setAttribute('class', config.type);
-  frame.setAttribute('nwdisable', '');
-  frame.setAttribute('nwfaketop', '');
+  var frame = $(document.createElement("IFRAME"));
+  frame.attr('seamless', null);
+  frame.attr('src', mainPath);
+  frame.attr('class', config.type);
+  frame.attr('nwdisable', '');
+  frame.attr('nwfaketop', '');
 
   return frame;
 };
 
-var setIframe = function (iframe) {
-  iframe.contentWindow.require = function (id) {
-    // Not working well !!!
+var setIframe = function (iframe, dipPath) {
+  iframe[0].contentWindow.require = function (id) {
+
+    // Need to cover all cases
+    if (id.startsWith('./')) {
+      id = id.replace('./', dipPath + '/');
+      id = path.resolve(id);
+    }
+    else {
+      id = path.join(dipPath, 'node_modules', id);
+    }
+
     return require(id);
   };
 };
@@ -26,15 +35,27 @@ var typeHandlers = {};
 
 typeHandlers.background = function (basePath, config) {
   var frame = getIframe(basePath, config);
-  document.body.appendChild(frame);
+  $(document.body).append(frame);
   setIframe(frame);
 };
-/*
-typeHandlers.widget = function (basePath, config) {
+
+typeHandlers.widget = function (basePath, config, layout) {
+  var grid = $('.grid-stack').data('gridstack');
+
   var frame = getIframe(basePath, config);
-  // TODO: Add to grid system
-  setIframe(frame);
-};*/
+
+  var divItem = $(document.createElement('div'));
+  divItem.addClass('grid-stack-item');
+
+  var divContent = $(document.createElement('div'));
+  divContent.addClass('grid-stack-item-content ');
+
+  divContent.append(frame);
+  divItem.append(divContent);
+  grid.add_widget(divItem, layout.x, layout.y, config.grid.width, config.grid.height, true);
+
+  setIframe(frame, basePath);
+};
 
 
 
@@ -45,7 +66,17 @@ api.getAppConfig(function (err, config) {
         return console.log('error loading dip %s - %s', dipName, err);
       }
 
-      typeHandlers[dip.config.type](dip.path, dip.config);
+      typeHandlers[dip.config.type](dip.path, dip.config, config.layout[dipName]);
     });
   });
+});
+
+$(function () {
+  var options = {
+    always_show_resize_handle: true,
+    animate: true,
+    float: true
+  };
+
+  $('.grid-stack').gridstack(options);
 });

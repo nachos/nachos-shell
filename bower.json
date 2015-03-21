@@ -1,6 +1,11 @@
 {
   "name": "nachos-shell",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "gridstack": "master",
+    "lodash": "~3.5.0",
+    "jquery": "~2.1.3",
+    "jquery-ui": "~1.11.4"
+  },
   "devDependencies": {}
 }
