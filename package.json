@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "description": "The main nachos shell",
   "scripts": {
-    "test": "gulp test",
-    "postinstall": "gulp nw-gyp && bower install && gulp build"
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
