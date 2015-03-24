@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "description": "The main nachos shell",
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "postinstall": "gulp nw-gyp && bower install && gulp build"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,6 @@
     "lodash": "^3.5.0",
     "nachos-api": "git://github.com/nachos/nachos-api",
     "native-api": "git://github.com/nachos/native-api",
-    "nw": "^0.12.0"
+    "nw": "0.12.0-rc1"
   }
 }
