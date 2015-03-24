@@ -1,14 +1,11 @@
 var api = require('nachos-api')('shell');
 var path = require('path');
 var _ = require('lodash');
+var gui = require('nw.gui');
 
-//var screenID = 1133551107
-//var screenID = 917481049;
-var currentScreen = screens.getCurrentScreen();
-//var currentScreen = screens.getScreenByID(screenID);
+var screenID = gui.App.argv[0];
+var currentScreen = screenID ? screens.getScreenByID(screenID) : screens.getCurrentScreen();
 screens.setWindowToScreen(currentScreen);
-//window.alert(currentScreen.id);
-
 
 var getIframe = function (basePath, config) {
   var mainPath = path.resolve(basePath, config.main);
@@ -65,13 +62,11 @@ typeHandlers.widget = function (basePath, config, layout) {
   setIframe(frame, basePath);
 };
 
-
-
 api.getAppConfig(function (err, config) {
   if (err) return console.log(err);
 
   _.forEach(config.dips || [], function (dipSettings) {
-    api.getDip(dipSettings.name, function (err, dip) {
+    api.dips.get(dipSettings.name, function (err, dip) {
       if (err) {
         return console.log('error loading dip %s - %s', dipSettings.name, err);
       }

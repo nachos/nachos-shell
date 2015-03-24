@@ -2,7 +2,7 @@
 var gulp = require('gulp');
 var childProcess = require('child_process');
 var spawn = childProcess.spawn;
-var exec = childProcess.exec;
+var gulpExec = require('gulp-exec');
 var nw = require('nw');
 var wiredep = require('wiredep').stream;
 var runSequence = require('run-sequence');
@@ -52,6 +52,16 @@ gulp.task('serve', function (cb) {
     'inject:js',
     'wiredep',
     'nw',
+    cb);
+});
+
+gulp.task('build', function (cb) {
+  runSequence(
+    'clean:tmp',
+    'less',
+    'inject:css',
+    'inject:js',
+    'wiredep',
     cb);
 });
 
@@ -137,4 +147,38 @@ gulp.task('clean:tmp', function (cb) {
 
 gulp.task('clean:dist', function (cb) {
   del(['dist'], cb);
+});
+
+gulp.task('nw-gyp', function(){
+  var nwVersion = '0.12.0';
+
+  var execOptions = {
+    continueOnError: false,
+    pipeStdout: false
+  };
+  var reportOptions = {
+    err: true,
+    stderr: true,
+    stdout: true
+  };
+
+  var pkg = require('./package.json');
+  var modules = [];
+  if(!!pkg.dependencies){
+    modules = Object.keys(pkg.dependencies)
+      .filter(function(m){
+        return m != 'nw'
+      })
+      .map(function(m){
+        return './node_modules/' + m + '/binding.gyp'
+      });
+  }
+
+  return gulp.src(modules)
+    .pipe(gulpExec(
+      'cd "<%= file.path %>/../"' +
+      ' && nw-gyp configure --target=' + nwVersion +
+      ' && nw-gyp build'
+    ), execOptions)
+    .pipe(gulpExec.reporter(reportOptions));
 });
