@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "Nachos shell",
   "main": "index.html",
+  "single-instance": false,
   "window": {
     "toolbar": true,
     "frame": false,
