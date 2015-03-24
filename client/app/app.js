@@ -65,7 +65,7 @@ typeHandlers.widget = function (basePath, config, layout) {
 api.getAppConfig(function (err, config) {
   if (err) return console.log(err);
 
-  _.forEach(config.dips || [], function (dipSettings) {
+  _.forEach((config[screenID] ? config[screenID].dips : config.dips ) || [], function (dipSettings) {
     api.dips.get(dipSettings.name, function (err, dip) {
       if (err) {
         return console.log('error loading dip %s - %s', dipSettings.name, err);
