@@ -2,6 +2,14 @@ var api = require('nachos-api')('shell');
 var path = require('path');
 var _ = require('lodash');
 
+//var screenID = 1133551107
+//var screenID = 917481049;
+var currentScreen = screens.getCurrentScreen();
+//var currentScreen = screens.getScreenByID(screenID);
+screens.setWindowToScreen(currentScreen);
+//window.alert(currentScreen.id);
+
+
 var getIframe = function (basePath, config) {
   var mainPath = path.resolve(basePath, config.main);
 
@@ -52,7 +60,7 @@ typeHandlers.widget = function (basePath, config, layout) {
 
   divContent.append(frame);
   divItem.append(divContent);
-  grid.add_widget(divItem, layout.x, layout.y, config.grid.width, config.grid.height, true);
+  grid.add_widget(divItem, layout.x, layout.y, layout.width, layout.height, true);
 
   setIframe(frame, basePath);
 };
@@ -60,13 +68,15 @@ typeHandlers.widget = function (basePath, config, layout) {
 
 
 api.getAppConfig(function (err, config) {
-  _.forEach(config.dips || [], function (dipName) {
-    api.getDip(dipName, function (err, dip) {
+  if (err) return console.log(err);
+
+  _.forEach(config.dips || [], function (dipSettings) {
+    api.getDip(dipSettings.name, function (err, dip) {
       if (err) {
-        return console.log('error loading dip %s - %s', dipName, err);
+        return console.log('error loading dip %s - %s', dipSettings.name, err);
       }
 
-      typeHandlers[dip.config.type](dip.path, dip.config, config.layout[dipName]);
+      typeHandlers[dip.config.type](dip.path, dip.config, dipSettings.layout);
     });
   });
 });

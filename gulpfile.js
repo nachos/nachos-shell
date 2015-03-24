@@ -25,7 +25,7 @@ gulp.task('default', ['test']);
 gulp.task('test', ['jshint']);
 
 gulp.task('jshint', function () {
-  gulp.src('./client/**/*.js')
+  gulp.src(['./client/**/*.js', '!./client/bower_components/**/*.js'])
     .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter(stylish))
     .pipe(jshint.reporter('fail'));

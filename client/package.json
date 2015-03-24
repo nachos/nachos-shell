@@ -4,12 +4,12 @@
   "description": "Nachos shell",
   "main": "index.html",
   "window": {
-    "toolbar": false,
+    "toolbar": true,
     "frame": false,
     "position": "center",
-    "fullscreen": true,
+    "fullscreen": false,
     "resizable": false,
-    "transparent": true
+    "transparent": true,
+    "show": false
   }
 }
-
