@@ -8,6 +8,12 @@ var wiredep = require('wiredep').stream;
 var runSequence = require('run-sequence');
 var del = require('del');
 var stylish = require('jshint-stylish');
+var nwBuilder = require('node-webkit-builder');
+var nativePath = require('native-api').path;
+var rimraf = require('rimraf');
+var ncp = require('ncp');
+var path = require('path');
+var mkdirp = require('mkdirp');
 
 /** Gulp dependencies */
 var gutil = require('gulp-util');
@@ -44,14 +50,106 @@ gulp.task('nw', function (cb) {
   });
 });
 
+gulp.task('build:nw', function (cb) {
+  // Read package.json
+  var pkg = require('./package.json');
+
+  // Find out which modules to include
+  var modules = [];
+  if (!!pkg.dependencies) {
+    modules = Object.keys(pkg.dependencies)
+      .filter(function(m) { return m != 'nodewebkit' })
+      .map(function(m) { return './node_modules/'+m+'/**/*' })
+  }
+
+  // Which platforms should we build
+  var platforms = ['win', 'osx', 'linux'];
+
+  var nw = new nwBuilder({
+    files: [ './client/**/*' ].concat(modules),
+    version: '0.12.0',
+    cacheDir: './build/cache',
+    platforms: platforms,
+    //macIcns: './app/assets/icons/mac.icns',
+    //winIco: './app/assets/icons/windows.ico',
+    checkVersions: false
+  });
+
+  nw.on('log', function(msg) {
+    // Ignore 'Zipping... messages
+    if (msg.indexOf('Zipping') !== 0) console.log(msg)
+  });
+
+  // Build!
+  nw.build(function(err) {
+    if (err) return console.error(err);
+/*
+    // Handle ffmpeg for Windows
+    if (platforms.indexOf('win') > -1) {
+      gulp.src('./deps/ffmpegsumo/win/*')
+        .pipe(gulp.dest(
+          './build/'+package.name+'/win'
+        ))
+    }
+
+    // Handle ffmpeg for Mac
+    if (platforms.indexOf('osx') > -1) {
+      gulp.src('./deps/ffmpegsumo/osx/*')
+        .pipe(gulp.dest(
+          './build/'+package.name+'/osx/node-webkit.app/Contents/Frameworks/node-webkit Framework.framework/Libraries'
+        ))
+    }
+
+    // Handle ffmpeg for Linux32
+    if (platforms.indexOf('linux32') > -1) {
+      gulp.src('./deps/ffmpegsumo/linux32/*')
+        .pipe(gulp.dest(
+          './build/'+package.name+'/linux32'
+        ))
+    }
+
+    // Handle ffmpeg for Linux64
+    if (platforms.indexOf('linux64') > -1) {
+      gulp.src('./deps/ffmpegsumo/linux64/*')
+        .pipe(gulp.dest(
+          './build/'+package.name+'/linux64'
+        ))
+    }*/
+
+    cb(err);
+  })
+});
+
 gulp.task('serve', function (cb) {
   runSequence(
-    'clean:tmp',
-    'less',
-    'inject:css',
-    'inject:js',
-    'wiredep',
-    'nw',
+    'build',
+    ['nw', 'watch'],
+    cb);
+});
+
+gulp.task('watch', function () {
+  gulp.watch([
+      'nachos-home/**/*'
+    ],
+    function (event) {
+      console.log('nachos-home changed!');
+      var userHome = nativePath.getUserHome();
+      var nachosHome = path.join(userHome, '.nachos');
+      rimraf.sync(nachosHome);
+
+      mkdirp(nachosHome, function () {
+        ncp('nachos-home', nachosHome, function () {
+          console.log('Copied successfully');
+        });
+      });
+    });
+});
+
+gulp.task('serve:dist', function (cb) {
+  runSequence(
+    'build',
+    'nw-gyp',
+    'build:nw',
     cb);
 });
 

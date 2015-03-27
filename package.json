@@ -29,6 +29,12 @@
     "gulp-util": "^3.0.4",
     "jshint-stylish": "^1.0.1",
     "lazypipe": "^0.2.2",
+    "mkdirp": "^0.5.0",
+    "nachos-configuration": "git://github.com/nachos/nachos-configuration",
+    "native-api": "git://github.com/nachos/native-api",
+    "ncp": "^2.0.0",
+    "node-webkit-builder": "^1.0.11",
+    "rimraf": "^2.3.2",
     "run-sequence": "^1.0.2",
     "wiredep": "^2.2.2"
   },
