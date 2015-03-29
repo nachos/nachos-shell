@@ -1,0 +1,16 @@
+<div ng-controller="TaskbarController"
+     class="taskbar md-whiteframe-z1" layout="row">
+  <div class="programs" flex layout="row">
+    <md-button>try</md-button>
+  </div>
+  <div class="toolbar" layout="row">
+    <div class="clock" layout="column" flex layout-align="space-around center">
+      <div>
+        <span>{{ date | amDateFormat:'h:mm A' }}</span>
+      </div>
+      <div>
+        <span>{{ date | amDateFormat:'DD/MM/YYYY' }}</span>
+      </div>
+    </div>
+  </div>
+</div>

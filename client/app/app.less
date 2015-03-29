@@ -1,6 +1,3 @@
-// injector
-// endinjector
-
 html, body{
   width: 100%;
   height: 100%;
@@ -13,35 +10,7 @@ iframe{
   border: none;
 }
 
-.widget{
-  background-color: white;
-  width: 100%!important;
-  height: 100%!important;
-}
-
-.taskbar{
-  height: 56px;
-  background-color: #262626;
-  width: 100%;
-}
-
-.gridster {
-  overflow: hidden;
-
-  .gridster-item{
-    border-radius: 2px;
-    overflow: hidden;
-    color: #004756;
-    background: #ffffff;
-    padding: 10px;
-
-    .foreground{
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
-  }
-
-}
+// injector
+@import 'dips/dips.less';
+@import 'taskbar/taskbar.less';
+// endinjector
