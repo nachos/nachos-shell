@@ -1,28 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="shellApp">
 <head lang="en">
   <meta charset="UTF-8">
   <title></title>
   <!-- bower:css -->
-  <link rel="stylesheet" href="bower_components/gridstack/dist/gridstack.css" />
+  <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+  <link rel="stylesheet" href="bower_components/angular-gridster/dist/angular-gridster.min.css" />
   <!-- endbower -->
   <link rel="stylesheet" href=".tmp/app/app.css">
   <!-- injector:css -->
   <!-- endinjector -->
 </head>
-<body>
-
-<div class="grid-stack">
+<body layout="column">
+<div flex>
+  <ng-include src="'app/dips/dips.html'"></ng-include>
+</div>
+<div class="taskbar md-whiteframe-z1">
 </div>
 <!-- bower:js -->
-<script src="bower_components/jquery/dist/jquery.js"></script>
-<script src="bower_components/lodash/lodash.js"></script>
-<script src="bower_components/jquery-ui/jquery-ui.js"></script>
-<script src="bower_components/gridstack/dist/gridstack.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-aria/angular-aria.js"></script>
+<script src="bower_components/angular-material/angular-material.js"></script>
+<script src="bower_components/javascript-detect-element-resize/detect-element-resize.js"></script>
+<script src="bower_components/angular-gridster/src/angular-gridster.js"></script>
 <!-- endbower -->
+<script src="app/app.js"></script>
 <!-- injector:js -->
+<script src="app/nchIframe.directive.js"></script>
+<script src="app/dips/dips.controller.js"></script>
 <script src="components/screens/index.js"></script>
 <!-- endinjector -->
-<script src="app/app.js"></script>
 </body>
 </html>

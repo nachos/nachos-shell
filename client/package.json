@@ -8,9 +8,8 @@
     "toolbar": true,
     "frame": false,
     "position": "center",
-    "fullscreen": false,
+    "fullscreen": true,
     "resizable": false,
-    "transparent": true,
-    "show": false
+    "transparent": true
   }
 }

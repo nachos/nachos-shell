@@ -1,55 +1,29 @@
 {
-  "dips": [{ 
-		"name": "wallpaper"
-  	  }, { 
-  		"name": "float-text",
-  		"layout": {
-  		  "x": 0,
-  		  "y": 0,
-  		  "width": 2,
-  		  "height": 2
-  		}
-	  }, { 
-		"name": "float-text",
-		"layout": {
-		  "x": 3,
-		  "y": 2,
-		  "width": 3,
-		  "height": 3
-		}
-  }],
-  "1101726035" : {
-  	"dips": [{ 
-  		"name": "wallpaper"
-  	  }, { 
-  		"name": "float-text",
-  		"layout": {
-  		  "x": 0,
-  		  "y": 0,
-  		  "width": 2,
-  		  "height": 2
-  		}
-  	  }, { 
-  		"name": "float-text",
-  		"layout": {
-  		  "x": 3,
-  		  "y": 2,
-  		  "width": 3,
-  		  "height": 3
-  		}
-	  }]
-  }, 
-  "2265386237" : {
-  	"dips": [{ 
-  		"name": "wallpaper"
-  	  }, { 
-  		"name": "float-text",
-  		"layout": {
-  		  "x": 3,
-  		  "y": 2,
-  		  "width": 3,
-  		  "height": 3
-  		}
-	  }]
-  }
+  "dips": [
+    {
+      "name": "float-text",
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "name": "sample-widget",
+      "layout": {
+        "x": 3,
+        "y": 2,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "name": "sample-widget",
+      "layout": {
+        "width": 2,
+        "height": 1
+      }
+    }
+  ]
 }

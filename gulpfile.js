@@ -9,7 +9,6 @@ var runSequence = require('run-sequence');
 var del = require('del');
 var stylish = require('jshint-stylish');
 var nwBuilder = require('node-webkit-builder');
-var nativePath = require('native-api').path;
 var rimraf = require('rimraf');
 var ncp = require('ncp');
 var path = require('path');
@@ -38,15 +37,18 @@ gulp.task('jshint', function () {
 });
 
 gulp.task('nw', function (cb) {
-  var process = spawn(nw.findpath(), ['client']);
+  var nwProcess = spawn(nw.findpath(), ['client']);
 
-  process.on('error', cb);
-  process.on('close', function (code) {
+  nwProcess.on('error', cb);
+  nwProcess.on('close', function (code) {
     if (code) {
       cb(new Error('child process exited with code ' + code))
     }
 
     cb();
+
+    // Close gulp
+    process.exit(1);
   });
 });
 
@@ -128,7 +130,7 @@ gulp.task('serve', function (cb) {
 });
 
 gulp.task('watch', function () {
-  gulp.watch([
+  return gulp.watch([
       'nachos-home/**/*'
     ],
     function (event) {
@@ -190,7 +192,8 @@ gulp.task('less', ['inject:less'], function () {
 gulp.task('inject:less', function () {
   return gulp.src('client/app/app.less')
     .pipe(inject(gulp.src([
-      'client/{app,components}/**/*.less'
+      'client/{app,components}/**/*.less',
+      '!client/app/app.less'
     ], {read: false}), {
       transform: function (filePath) {
         filePath = filePath.replace('/client/app/', '');
