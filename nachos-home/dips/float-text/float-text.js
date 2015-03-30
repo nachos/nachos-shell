@@ -9,5 +9,5 @@ setTimeout(function () {
 	var test = require('./test');
 
 	// Test
-	alert(test.test);
+	//alert(test.test);
 }, 100);

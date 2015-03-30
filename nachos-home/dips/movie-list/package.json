@@ -1,0 +1,21 @@
+{
+  "name": "movie-list-dip",
+  "version": "0.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nachos/nachos-shell"
+  },
+  "author": "Nachos team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nachos/nachos-shell/issues"
+  },
+  "homepage": "https://github.com/nachos/nachos-shell",
+  "devDependencies": {},
+  "dependencies": {
+    "lodash": "^3.6.0",
+    "movie-info": "^1.0.1",
+    "movie-list": "^1.0.2"
+  }
+}

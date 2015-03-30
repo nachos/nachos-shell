@@ -3,3 +3,4 @@ client/bower_components
 .idea
 client/.tmp
 build
+nachos-home/dips/**/**/bower_components/**/*

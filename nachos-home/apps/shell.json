@@ -10,7 +10,7 @@
       }
     },
     {
-      "name": "sample-widget",
+      "name": "movie-list",
       "layout": {
         "x": 3,
         "y": 2,
