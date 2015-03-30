@@ -135,9 +135,12 @@ gulp.task('watch', function () {
     ],
     function (event) {
       console.log('nachos-home changed!');
-      var userHome = nativePath.getUserHome();
+      // No native api so write it hard coded..
+      var userHome = 'C:\\Users\\Elad';
       var nachosHome = path.join(userHome, '.nachos');
-      rimraf.sync(nachosHome);
+
+      rimraf.sync(path.join(nachosHome, 'dips'));
+      rimraf.sync(path.join(nachosHome, 'apps'));
 
       mkdirp(nachosHome, function () {
         ncp('nachos-home', nachosHome, function () {
