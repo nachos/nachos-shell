@@ -14,7 +14,7 @@
   <!-- endinjector -->
 </head>
 <body layout="column">
-<div flex>
+<div flex class="desktop">
   <ng-include src="'app/dips/dips.html'"></ng-include>
 </div>
 <ng-include src="'app/taskbar/taskbar.html'"></ng-include>
@@ -35,11 +35,12 @@
 <script src="app/moment.js"></script>
 <script src="app/dips/dips.controller.js"></script>
 <script src="app/taskbar/taskbar.controller.js"></script>
-<script src="components/dips/index.js"></script>
-<script src="components/nachos-api/index.js"></script>
-<script src="components/screens/index.js"></script>
 <script src="app/common/directives/nchIframe.directive.js"></script>
-<script src="app/common/services/gridService.js"></script>
+<script src="app/common/services/dips.service.js"></script>
+<script src="app/common/services/grid.service.js"></script>
+<script src="app/common/services/nachosApi.service.js"></script>
+<script src="app/common/services/nativeApi.service.js"></script>
+<script src="app/common/services/screens.service.js"></script>
 <!-- endinjector -->
 </body>
 </html>
