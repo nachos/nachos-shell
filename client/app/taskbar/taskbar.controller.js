@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('TaskbarController', function($scope, $timeout){
+  .controller('TaskbarController', function($scope, $timeout, grid){
     $scope.date = Date.now();
+
+    $scope.grid = grid;
 
     var tick = function() {
       $scope.date = Date.now(); // get the current time

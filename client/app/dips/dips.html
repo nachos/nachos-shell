@@ -1,10 +1,7 @@
 <div ng-controller="DipsController">
-  <div>
-    <input type="button" ng-click="toggleEditMode()" value="{{editMode ? 'Exit' : 'Enter' }} edit mode" />
-  </div>
-  <div gridster="gridsterOpts">
-    <div ng-repeat="dip in dips" gridster-item="dip" class="md-whiteframe-z1">
-      <div class="foreground" ng-if="editMode"></div>
+  <div gridster="grid.settings">
+    <div ng-repeat="dip in dips" gridster-item="dip" class="md-whiteframe-z1" >
+      <div class="foreground" ng-show="grid.editMode" ng-class="{ enabled: grid.editMode }"></div>
       <nch-iframe src="dip.path" class="widget"></nch-iframe>
     </div>
   </div>

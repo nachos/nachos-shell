@@ -4,6 +4,10 @@
     <md-button>try</md-button>
   </div>
   <div class="toolbar" layout="row">
+    <md-button ng-click="grid.toggleEditMode()">
+      <i ng-hide="grid.editMode" class="mdi mdi-layers"></i>
+      <i ng-show="grid.editMode" class="mdi mdi-layers-off"></i>
+    </md-button>
     <div class="clock" layout="column" flex layout-align="space-around center">
       <div>
         <span>{{ date | amDateFormat:'h:mm A' }}</span>
@@ -11,6 +15,9 @@
       <div>
         <span>{{ date | amDateFormat:'DD/MM/YYYY' }}</span>
       </div>
+    </div>
+    <div layout="column" layout-align="center center">
+      <i class="mdi mdi-account-circle"></i>
     </div>
   </div>
 </div>
