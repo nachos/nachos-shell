@@ -1,7 +1,7 @@
-<div ng-controller="MovieListController" layout-fill>
-  <div ng-if="doneLoading" layout-fill>
+<div ng-controller="MovieListController">
+  <div ng-if="doneLoading" layout="column" class="movie-list">
     <div class="most-ranked md-whiteframe-z1" layout="column"
-         style="background-image: url({{ mostRanked.backdrop }});">
+         style="background-image: url({{ mostRanked.backdrop }});" flex>
       <div class="backdrop" layout="column" layout-align="end start" flex>
         <span class="title">{{ mostRanked.title }}</span>
         <span class="description">{{ mostRanked.response.imdbRating }} <i class="mdi mdi-star"></i></span>
@@ -10,11 +10,12 @@
         </md-button>
       </div>
     </div>
-    <div ng-repeat="movie in movies" layout="column"
-         class="other-movies">
+    <div class="other-movies" flex>
+      <div ng-repeat="movie in movies" layout="column">
       <div layout="row" class="title">
         <md-button flex>{{ movie.title }} {{ movie.response.imdbRating }} <i class="mdi mdi-star"></i></md-button>
       </div>
+    </div>
     </div>
   </div>
   <div ng-if="!doneLoading" layout-fill layout="column" layout-align="center center">
