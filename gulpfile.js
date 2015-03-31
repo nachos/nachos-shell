@@ -136,7 +136,7 @@ gulp.task('watch', function () {
     function (event) {
       console.log('nachos-home changed!');
       // No native api so write it hard coded..
-      var userHome = 'C:\\Users\\Elad';
+      var userHome = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
       var nachosHome = path.join(userHome, '.nachos');
 
       rimraf.sync(path.join(nachosHome, 'dips'));

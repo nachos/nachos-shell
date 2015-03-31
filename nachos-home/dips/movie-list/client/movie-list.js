@@ -6,7 +6,7 @@ angular.module('movieListApp')
     var movieInfo = require('movie-info');
     var _ = require('lodash');
 
-    movieList.listFolder('E:\\Movies', function (err, listData) {
+    movieList.listFolder('D:\\Videos\\Movies', function (err, listData) {
       if (err) {
         return console.log(err);
       }
