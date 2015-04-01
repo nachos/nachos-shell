@@ -10,34 +10,71 @@ body {
   overflow: hidden;
 }
 
-.movie-list .most-ranked {
+.movie-list .chosen-movie {
   height: 45%;
   min-height: 64px;
   background-position: center;
   background-size: cover;
 }
 
-.movie-list .most-ranked {
+.movie-list .chosen-movie {
   color: white;
   font-weight: 300;
+
 }
 
-.movie-list .most-ranked .backdrop {
+.movie-list .chosen-movie .loader {
+  background: white;
+  opacity: 1;
+}
+
+
+.movie-list .chosen-movie .loader.ng-hide-add.ng-hide-add-active,
+.movie-list .chosen-movie .loader.ng-hide-remove.ng-hide-remove-active {
+  transition: all ease 0.3s;
+}
+
+.movie-list .chosen-movie .loader.ng-hide-remove.ng-hide-remove-active {
+  transition-delay: 0.3s;
+}
+
+.movie-list .chosen-movie .loader.ng-hide {
+  opacity: 0;
+  transform: scale(0,0);
+
+}
+
+.movie-list .chosen-movie .backdrop {
   background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,0.09) 20%,rgba(0,0,0,0.26) 55%,rgba(0,0,0,0.47) 100%);
   padding: 8px;
   position: relative;
+  height: 100%;
 }
 
-.movie-list .most-ranked .backdrop .title {
+.movie-list .chosen-movie .backdrop.ng-hide-add.ng-hide-add-active,
+.movie-list .chosen-movie .backdrop.ng-hide-remove.ng-hide-remove-active {
+  transition: all ease 0.3s;
+}
+
+.movie-list .chosen-movie .backdrop.ng-hide-remove.ng-hide-remove-active {
+  transition-delay: 0.3s;
+}
+
+.movie-list .chosen-movie .backdrop.ng-hide {
+  opacity: 0;
+  height: 0;
+}
+
+.movie-list .chosen-movie .backdrop .title {
   font-size: 1.8em;
   font-style: italic;
 }
 
-.movie-list .most-ranked .backdrop .description {
+.movie-list .chosen-movie .backdrop .description {
   font-size: 1em;
 }
 
-.movie-list .most-ranked .backdrop .md-fab {
+.movie-list .chosen-movie .backdrop .md-fab {
   position: absolute;
   bottom: -20px;
   right: 8px;
