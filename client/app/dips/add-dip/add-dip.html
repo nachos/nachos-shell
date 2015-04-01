@@ -1,0 +1,7 @@
+<md-dialog flex="30">
+  <div layout="column">
+    <div ng-repeat="dip in dips">
+      <md-button ng-click="add(dip)">{{ dip.config.name }}</md-button>
+    </div>
+  </div>
+</md-dialog>
