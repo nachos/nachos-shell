@@ -1,7 +1,10 @@
 <div ng-controller="TaskbarController"
      class="taskbar md-whiteframe-z1" layout="row">
   <div class="programs" flex layout="row">
-    <md-button ng-repeat="window in windows">{{ window.process.name }}</md-button>
+    <md-button ng-repeat="window in windows">
+      <span>{{ window[0].process.name }}</span>
+      <i class="mdi {{ getNumberOfWindowsClass(window) }}"></i>
+    </md-button>
   </div>
   <div class="toolbar" layout="row">
     <md-button ng-click="grid.toggleEditMode()">

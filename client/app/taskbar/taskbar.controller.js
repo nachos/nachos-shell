@@ -2,6 +2,7 @@
 
 angular.module('shellApp')
   .controller('TaskbarController', function($scope, $timeout, grid, nativeApi){
+    var _ = require('lodash');
     $scope.date = Date.now();
 
     $scope.grid = grid;
@@ -14,6 +15,20 @@ angular.module('shellApp')
     // Start the timer
     $timeout(tick, 1000);
 
-    $scope.windows = nativeApi.windows;
+    $scope.windows = _.groupBy(nativeApi.windows, function (window) {
+      return window.process.name;
+    });
+
+    $scope.getNumberOfWindowsClass = function (window) {
+      if(window.length > 9){
+        return 'mdi-numeric-9-plus-box-multiple-outline';
+      }
+      else if (window.length == 1) {
+        return '';
+      }
+      else {
+        return 'mdi-numeric-' + window.length + '-box-multiple-outline'
+      }
+    }
 
   });
