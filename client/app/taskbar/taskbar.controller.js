@@ -1,10 +1,9 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('TaskbarController', function($scope, $timeout, grid, nativeApi){
+  .controller('TaskbarController', function($scope, $timeout, grid, nativeApi, workspaces){
     var _ = require('lodash');
     $scope.date = Date.now();
-
     $scope.grid = grid;
 
     var tick = function() {
@@ -19,6 +18,9 @@ angular.module('shellApp')
       return window.process.name;
     });
 
+    workspaces.getWorkspaces().then(function(workspaces){
+      $scope.workspaces = workspaces;
+    });
     $scope.getNumberOfWindowsClass = function (window) {
       if(window.length > 9){
         return 'mdi-numeric-9-plus-box-multiple-outline';
@@ -31,4 +33,7 @@ angular.module('shellApp')
       }
     }
 
+    $scope.changeWorkspace = function(id){
+      workspaces.changeWorkspace(id);
+    }
   });

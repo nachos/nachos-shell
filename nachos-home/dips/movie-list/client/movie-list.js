@@ -59,7 +59,7 @@ angular.module('movieListApp')
 
     };
 
-    movieList.listFolder('E:\\Movies', function (err, listData) {
+    movieList.listFolder('D:\\Downloads\\Movies', function (err, listData) {
       if (err) {
         return console.log(err);
       }

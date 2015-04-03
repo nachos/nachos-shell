@@ -1,29 +1,61 @@
 {
-  "dips": [
+  "workspaces":[
     {
-      "name": "float-text",
-      "layout": {
-        "x": 0,
-        "y": 0,
-        "width": 5,
-        "height": 5
-      }
+      "id" : 1,
+      "name": "Work",
+      "selected": false,
+      "dips": [
+        {
+          "name": "float-text",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "width": 5,
+            "height": 5
+          }
+        },
+        {
+          "name": "movie-list",
+          "layout": {
+            "x": 10,
+            "y": 10,
+            "width": 10,
+            "height": 10
+          }
+        },
+        {
+          "name": "sample-widget",
+          "layout": {
+            "width": 7,
+            "height": 7
+          }
+        }
+      ]
     },
     {
-      "name": "movie-list",
-      "layout": {
-        "x": 10,
-        "y": 10,
-        "width": 10,
-        "height": 10
-      }
-    },
-    {
-      "name": "sample-widget",
-      "layout": {
-        "width": 7,
-        "height": 7
-      }
+      "id": 2,
+      "name": "Home",
+      "selected": true,
+      "dips": [
+        {
+          "name": "float-text",
+          "layout": {
+            "x": 100,
+            "y": 100,
+            "width": 5,
+            "height": 5
+          }
+        },
+        {
+          "name": "movie-list",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "width": 10,
+            "height": 10
+          }
+        }
+      ]
     }
   ]
 }
