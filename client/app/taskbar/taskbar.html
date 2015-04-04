@@ -1,7 +1,7 @@
 <div ng-controller="TaskbarController"
      class="taskbar md-whiteframe-z1" layout="row">
   <div class="programs" flex layout="row">
-    <md-button ng-repeat="window in windows">
+    <md-button ng-repeat="window in windows" ng-click="windowClick(window)">
       <span>{{ window[0].process.name }}</span>
       <i class="mdi {{ getNumberOfWindowsClass(window) }}"></i>
     </md-button>

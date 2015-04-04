@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('TaskbarController', function($scope, $timeout, grid, nativeApi){
+  .controller('TaskbarController', function($scope, $timeout, grid, windows, nativeApi){
     var _ = require('lodash');
     $scope.date = Date.now();
 
@@ -15,7 +15,7 @@ angular.module('shellApp')
     // Start the timer
     $timeout(tick, 1000);
 
-    $scope.windows = _.groupBy(nativeApi.windows, function (window) {
+    $scope.windows = _.groupBy(windows.windows, function (window) {
       return window.process.name;
     });
 
@@ -29,6 +29,18 @@ angular.module('shellApp')
       else {
         return 'mdi-numeric-' + window.length + '-box-multiple-outline'
       }
-    }
+    };
 
+    $scope.windowClick = function (window) {
+      if (window.length === 1) {
+        var win = window[0];
+        if (nativeApi.window.isForeground(win.handle)) {
+          nativeApi.window.minimize(win.handle);
+        } else {// if (nativeApi.window.isMinimized(win.handle)) {
+          nativeApi.window.setToForeground(win.handle);
+        }
+      } else {
+        alert('Can\'t click, multiple processes');
+      }
+    };
   });
