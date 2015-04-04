@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('AddDipController', function($scope, $mdDialog, dips) {
-    dips.getDips().then(function (dips) {
+  .controller('AddDipController', function($scope, $mdDialog, workspaces) {
+    workspaces.getDips().then(function (dips) {
       $scope.dips = dips;
     });
 

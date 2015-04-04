@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('DipsController', function ($scope, $mdDialog, dips, grid) {
+  .controller('DipsController', function ($scope, $mdDialog, grid, workspaces) {
     $scope.dips = [];
 
     $scope.grid = grid;
 
-    dips.getDips().then(function (dips) {
-      $scope.dips = dips;
-    });
+    renderDips();
+
+    workspaces.registerScope($scope);
 
     $scope.addDip = function (ev) {
       $mdDialog.show({
@@ -19,5 +19,14 @@ angular.module('shellApp')
         .then(function (dip) {
           $scope.dips.push(dip);
         });
+    }
+    $scope.$on('refreshWorkspace', function(){
+      renderDips();
+    });
+
+    function renderDips(){
+      workspaces.getDips().then(function (dips) {
+        $scope.dips = dips;
+      });
     }
   });

@@ -1,10 +1,8 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('TaskbarController', function($scope, $timeout, grid, windows, nativeApi){
-    var _ = require('lodash');
+  .controller('TaskbarController', function($scope, $timeout, grid, nativeApi, workspaces, windows){    var _ = require('lodash');
     $scope.date = Date.now();
-
     $scope.grid = grid;
 
     var tick = function() {
@@ -19,6 +17,10 @@ angular.module('shellApp')
       return window.process.name;
     });
 
+    workspaces.getWorkspaces().then(function(workspaces){
+      $scope.workspaces = workspaces;
+    });
+
     $scope.getNumberOfWindowsClass = function (window) {
       if(window.length > 9){
         return 'mdi-numeric-9-plus-box-multiple-outline';
@@ -31,7 +33,11 @@ angular.module('shellApp')
       }
     };
 
-    $scope.windowClick = function (window) {
+	$scope.changeWorkspace = function(id){
+      workspaces.changeWorkspace(id);
+    }
+
+	$scope.windowClick = function (window) {
       if (window.length === 1) {
         var win = window[0];
         if (nativeApi.window.isForeground(win.handle)) {
@@ -42,5 +48,4 @@ angular.module('shellApp')
       } else {
         alert('Can\'t click, multiple processes');
       }
-    };
-  });
+    };  });

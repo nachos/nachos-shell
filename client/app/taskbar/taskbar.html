@@ -6,6 +6,9 @@
       <i class="mdi {{ getNumberOfWindowsClass(window) }}"></i>
     </md-button>
   </div>
+  <div class="workspaces" layout="row">
+    <md-button ng-repeat="workspace in workspaces" ng-click="changeWorkspace(workspace.id)"> {{ workspace.name }} </md-button>
+  </div>
   <div class="toolbar" layout="row">
     <md-button ng-click="grid.toggleEditMode()">
       <i ng-hide="grid.editMode" class="mdi mdi-layers"></i>
