@@ -1,15 +1,14 @@
 'use strict';
 
 angular.module('shellApp')
-  .service('workspaces', function($q, $log, nachosApi) {
+  .service('workspaces', function($q, $log, $rootScope, nachosApi) {
     var _ = require('lodash');
     var path = require('path');
     var activeWorkspace;
-    var shellScope;
 
-    this.registerScope = function(scope){
-      shellScope = scope;
-    };
+    this.getActiveWorkspace = function(){
+      return activeWorkspace;
+    }
 
     /*
     * fullData - When you require the actual layout of the workspace, and not just the name and id
@@ -60,6 +59,7 @@ angular.module('shellApp')
               return $log.log('error loading dip %s - %s', dipSettings.name, err);
             }
 
+            dip.id = dipSettings.id;
             dip.path = path.resolve(dip.path, dip.config.main);
             dip.sizeX = dipSettings.layout.width;
             dip.sizeY = dipSettings.layout.height;
@@ -85,7 +85,7 @@ angular.module('shellApp')
         }
         else if( activeWorkspace != id) {
           activeWorkspace = id;
-          shellScope.$emit('refreshWorkspace');
+          $rootScope.$emit('refreshWorkspace');
         }
       })
     }
