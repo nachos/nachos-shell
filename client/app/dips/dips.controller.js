@@ -14,9 +14,10 @@ angular.module('shellApp')
         templateUrl: 'app/dips/add-dip/add-dip.html',
         targetEvent: ev
       })
-        .then(function (dip) {
-          $scope.dips.push(dip);
-        });
+      .then(function (dip) {
+        $scope.dips.push(dip);
+        workspaces.addNewWidget(dip);
+      });
     }
     $rootScope.$on('refreshWorkspace', function(){
       renderDips();
