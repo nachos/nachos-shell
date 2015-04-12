@@ -6,6 +6,7 @@
       "selected": false,
       "dips": [
         {
+          "id": 1,
           "name": "float-text",
           "layout": {
             "x": 0,
@@ -15,6 +16,7 @@
           }
         },
         {
+          "id": 2,
           "name": "movie-list",
           "layout": {
             "x": 10,
@@ -24,6 +26,7 @@
           }
         },
         {
+          "id": 3,
           "name": "sample-widget",
           "layout": {
             "width": 7,
@@ -38,6 +41,7 @@
       "selected": true,
       "dips": [
         {
+          "id": 4,
           "name": "float-text",
           "layout": {
             "x": 100,
@@ -47,6 +51,7 @@
           }
         },
         {
+          "id": 5,
           "name": "movie-list",
           "layout": {
             "x": 0,

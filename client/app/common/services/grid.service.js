@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('shellApp')
-  .service('grid', function() {
+  .service('grid', function(workspaces) {
     var self = this;
+    var _ = require('lodash');
 
     var itemDragged = function (event, $element, widget) {
-      // Use widget.config.name and size and col to save layout.
+      workspaces.saveWidgetLayout(widget);
     };
 
     self.settings = {
