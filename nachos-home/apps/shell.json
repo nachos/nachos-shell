@@ -1,9 +1,11 @@
 {
-  "workspaces":[
+  "screens": {
+    "primary": 1
+  },
+  "workspaces": [
     {
       "id" : 1,
       "name": "Work",
-      "selected": false,
       "dips": [
         {
           "id": 1,
@@ -38,7 +40,6 @@
     {
       "id": 2,
       "name": "Home",
-      "selected": true,
       "dips": [
         {
           "id": 4,

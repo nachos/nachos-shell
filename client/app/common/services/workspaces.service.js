@@ -1,22 +1,23 @@
 'use strict';
 
 angular.module('shellApp')
-  .service('workspaces', function($q, $log, $rootScope, nachosApi) {
+  .service('workspaces', function($log, $rootScope, nachosApi) {
     var self = this;
     var _ = require('lodash');
+    var async = require('async');
     var path = require('path');
     var activeWorkspace;
 
-    var dipToWidget = function(dip, widget){
-      widget.id = dip.id;
-      widget.name = dip.name;
-      widget.path = path.resolve(widget.path, widget.config.main);
-      widget.sizeX = dip.layout.width;
-      widget.sizeY = dip.layout.height;
-      widget.row = dip.layout.y;
-      widget.col = dip.layout.x;
+    var dipToWidget = function(dip, dipSettings){
+      dip.id = dipSettings.id;
+      dip.name = dipSettings.name;
+      dip.path = path.resolve(dip.path, dip.config.main);
+      dip.sizeX = dipSettings.layout.width;
+      dip.sizeY = dipSettings.layout.height;
+      dip.row = dipSettings.layout.y;
+      dip.col = dipSettings.layout.x;
 
-      return widget;
+      return dip;
     };
 
     var widgetToDip = function(widget, dip){
@@ -37,6 +38,56 @@ angular.module('shellApp')
       return dip;
     };
 
+    var updateWorkspace = function (workspace, updateAll) {
+      activeWorkspace = workspace;
+      $rootScope.$emit('refreshWorkspace');
+
+      if (updateAll) {
+        // use nachos api to notify about workspace change
+      }
+    };
+
+    var getActiveWorkspace = function (callback) {
+      self.getWorkspaces(function (err, workspaces) {
+        if (err) {
+          callback(err);
+          return $log.log(err);
+        }
+
+        nachosApi.getAppConfig(function (err, config) {
+          if (err) {
+            callback(err);
+            return $log.log(err);
+          }
+
+          var active = _.findWhere(workspaces, {id: config.screens.primary});
+
+          return callback(null, active);
+        });
+      });
+    };
+
+    var workspaceToDips = function (workspace, callback) {
+      async.map(workspace.dips, function (dipSettings, callback) {
+        nachosApi.dips.get(dipSettings.name, function (err, dip) {
+          if (err) {
+            callback(null, null);
+            return $log.log('error loading dip %s - %s', dipSettings.name, err);
+          }
+
+          dipToWidget(dip, dipSettings);
+
+          callback(null, dip);
+        });
+      }, function (err, dips) {
+        var filtered = _.filter(dips, function (dip) {
+          return !!dip;
+        });
+
+        callback(null, filtered);
+      });
+    };
+
     this.addNewWidget = function(widget){
       // Find a better way to assign dip ids
       nachosApi.getAppConfig(function(err, config){
@@ -47,25 +98,24 @@ angular.module('shellApp')
         var maxWorkspace = _.max(config.workspaces, function(workspace){
           return _.max(workspace.dips, 'id').id;
         });
+
         widget.id = _.max(maxWorkspace.dips, 'id').id + 1;
         self.saveWidgetLayout(widget);
       });
     };
 
-    this.saveWidgetLayout = function(widget){
+    this.saveWidgetLayout = function(widget) {
       nachosApi.getAppConfig(function (err, config) {
         if (err) {
           return $log.log(err);
         }
 
-        var workspace = _.findWhere(config.workspaces, { id: activeWorkspace });
+        var workspace = _.findWhere(config.workspaces, {id: activeWorkspace.id});
         var dip = _.findWhere(workspace.dips, { id: widget.id});
         if(!dip) {
           dip = widgetToDip(widget, dip);
           workspace.dips.push(dip);
-        }
-        else
-        {
+        } else {
           widgetToDip(widget, dip);
         }
 
@@ -77,78 +127,56 @@ angular.module('shellApp')
       });
     };
 
-    /*
-    * fullData - When you require the actual layout of the workspace, and not just the name and id
-     */
-    this.getWorkspaces = function(fullData){
-        var deferred = $q.defer();
+    this.getWorkspaces = function(callback){
+      nachosApi.getAppConfig(function (err, config) {
+        if (err) {
+          callback(err);
+          return $log.log(err);
+        }
 
-        // Make async
-        nachosApi.getAppConfig(function (err, config) {
+        callback(null, config.workspaces || []);
+      });
+    };
+
+    this.getWorkspacesMeta = function (callback) {
+      self.getWorkspaces(function (err, workspaces) {
+        if (err) {
+          callback(err);
+          return $log.log(err);
+        }
+
+        var meta = _.map(workspaces, function (workspace) {
+          return { id: workspace.id, name: workspace.name }
+        });
+
+        callback(null, meta);
+      });
+    };
+
+    this.getWidgets = function(callback){
+      if (activeWorkspace) {
+        workspaceToDips(activeWorkspace, callback);
+      } else {
+        getActiveWorkspace(function (err, workspace) {
           if (err) {
-            deferred.reject(err);
+            callback(err);
             return $log.log(err);
           }
 
-          var workspaces = [];
-
-          _.forEach(config.workspaces || [], function(workspace){
-            if(fullData)
-              workspaces.push(workspace);
-            else
-              workspaces.push({ id: workspace.id, name: workspace.name});
-
-            if(!activeWorkspace)
-            {
-              if(workspace.selected)
-              {
-                activeWorkspace = workspace.id;
-              }
-            }
-          });
-          deferred.resolve(workspaces);
+          activeWorkspace = workspace;
+          workspaceToDips(activeWorkspace, callback);
         });
-
-      return deferred.promise;
+      }
     };
 
-    this.getDips = function(){
-      var deferred = $q.defer();
-      this.getWorkspaces(true).then(function(workspaces){
-        var updatedWorkspace = _.findWhere(workspaces, { 'id': activeWorkspace });
-        activeWorkspace = updatedWorkspace.id;
-
-        var dips = [];
-        $q.all(updatedWorkspace.dips.map(function (dipSettings) {
-          var dipDefer = $q.defer();
-          nachosApi.dips.get(dipSettings.name, function (err, dip) {
-            if (err) {
-              return $log.log('error loading dip %s - %s', dipSettings.name, err);
-            }
-
-            dipToWidget(dipSettings, dip);
-
-            dips.push(dip);
-            dipDefer.resolve();
-          });
-          return dipDefer.promise;
-        })).then(function(){
-          deferred.resolve(dips);
-        });
-      });
-      return deferred.promise;
-    };
-
-    this.changeWorkspace = function(id){
-      this.getWorkspaces().then(function(workspaces){
-        if(!_.findWhere(workspaces, { 'id': id }))
-        {
+    this.changeWorkspace = function(id) {
+      self.getWorkspaces(function(err, workspaces) {
+        var workspace = _.findWhere(workspaces, { 'id': id });
+        if(!workspace) {
           $log.error('No such workspace ' + id);
+        } else if(activeWorkspace != id) {
+          updateWorkspace(workspace, true);
         }
-        else if( activeWorkspace != id) {
-          activeWorkspace = id;
-          $rootScope.$emit('refreshWorkspace');
-        }
-      })
+      });
     }
 });

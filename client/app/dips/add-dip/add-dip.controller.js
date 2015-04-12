@@ -3,13 +3,14 @@
 angular.module('shellApp')
   .controller('AddDipController', function($scope, $mdDialog, workspaces) {
     // Shouldn't be workspace - should turn to nachos-api to figure out which dips are installed
-    workspaces.getDips().then(function (dips) {
-      $scope.dips = dips;
+    workspaces.getWidgets(function (err, widgets) {
+      $scope.widgets = widgets;
+      $scope.$apply();
     });
 
-    $scope.add = function (dip) {
-      delete dip.col;
-      delete dip.row;
-      $mdDialog.hide(dip);
+    $scope.add = function (widget) {
+      delete widget.col;
+      delete widget.row;
+      $mdDialog.hide(widget);
     }
   });

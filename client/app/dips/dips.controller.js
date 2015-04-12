@@ -6,26 +6,28 @@ angular.module('shellApp')
 
     $scope.grid = grid;
 
-    renderDips();
+    renderWidgets();
 
-    $scope.addDip = function (ev) {
+    $scope.addWidget = function (ev) {
       $mdDialog.show({
         controller: 'AddDipController',
         templateUrl: 'app/dips/add-dip/add-dip.html',
         targetEvent: ev
       })
-      .then(function (dip) {
-        $scope.dips.push(dip);
-        workspaces.addNewWidget(dip);
+      .then(function (widget) {
+        $scope.widgets.push(widget);
+        workspaces.addNewWidget(widget);
       });
-    }
+    };
+
     $rootScope.$on('refreshWorkspace', function(){
-      renderDips();
+      renderWidgets();
     });
 
-    function renderDips(){
-      workspaces.getDips().then(function (dips) {
-        $scope.dips = dips;
+    function renderWidgets(){
+      workspaces.getWidgets(function (err, widgets) {
+        $scope.widgets = widgets;
+        $scope.$apply();
       });
     }
   });
