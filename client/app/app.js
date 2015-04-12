@@ -26,10 +26,8 @@ angular.module('shellApp', ['ngMaterial', 'gridster', 'angularMoment'])
     var rendererProcess = _.filter(processes, function (proc) {
       return proc.processID === process.pid;
     });
-    var parentProcessId = rendererProcess.parentProcessID;
-    console.log(parentProcessId);
+    var parentProcessId = rendererProcess[0].parentProcessID;
 
-    //var win = _.findWhere(windows, { process: { name: 'nw.exe' } });
-    //console.log(win);
+    var win = _.findWhere(windows, { processID: parentProcessId });
     //console.log(nativeApi.window.disableZIndexChange(win.handle));
   });

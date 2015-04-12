@@ -125,7 +125,7 @@ gulp.task('build:nw', function (cb) {
 gulp.task('serve', function (cb) {
   runSequence(
     'build',
-    ['nw', 'watch'],
+    ['nw'],
     cb);
 });
 
