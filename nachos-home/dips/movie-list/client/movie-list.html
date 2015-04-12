@@ -6,8 +6,11 @@
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
       </div>
       <div ng-hide="loading" class="backdrop" layout="column" layout-align="end start" flex>
-        <span class="title">{{ chosenMovie.title }}</span>
-        <span class="description">{{ chosenMovie.response.imdbRating }} <i class="mdi mdi-star"></i></span>
+        <span class="title">{{ chosenMovie.Title }}</span>
+        <div>
+          <span>({{ chosenMovie.Year }}) </span>
+          <span class="description">{{ chosenMovie.imdbRating }} <i class="mdi mdi-star"></i></span>
+        </div>
         <md-button class="md-fab md-mini md-primary">
           <i class="mdi mdi-play"></i>
         </md-button>
@@ -16,7 +19,7 @@
     <div class="other-movies" flex>
       <div ng-repeat="movie in movies" layout="column">
       <div layout="row" class="title">
-        <md-button flex ng-click="chooseMovie(movie)">{{ movie.title }} {{ movie.response.imdbRating }} <i class="mdi mdi-star"></i></md-button>
+        <md-button flex ng-click="chooseMovie(movie)">{{ movie.Title }} {{ movie.imdbRating }} <i class="mdi mdi-star"></i></md-button>
       </div>
     </div>
     </div>
