@@ -16,7 +16,7 @@
   "dependencies": {
     "lodash": "^3.6.0",
     "movie-info": "^1.0.1",
-    "movie-list": "^1.0.2",
+    "movie-list": "git://github.com/omrilitov/movie-list#subdirectories",
     "q": "^1.2.0"
   }
 }

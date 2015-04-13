@@ -54,7 +54,7 @@ angular.module('shellApp')
           return $log.log(err);
         }
 
-        nachosApi.getAppConfig(function (err, config) {
+        nachosApi.getAppConfig('shell', function (err, config) {
           if (err) {
             callback(err);
             return $log.log(err);
@@ -90,7 +90,7 @@ angular.module('shellApp')
 
     this.addNewWidget = function(widget){
       // Find a better way to assign dip ids
-      nachosApi.getAppConfig(function(err, config){
+      nachosApi.getAppConfig('shell', function(err, config){
         if (err) {
           return $log.log(err);
         }
@@ -105,7 +105,7 @@ angular.module('shellApp')
     };
 
     this.saveWidgetLayout = function(widget) {
-      nachosApi.getAppConfig(function (err, config) {
+      nachosApi.getAppConfig('shell', function (err, config) {
         if (err) {
           return $log.log(err);
         }
@@ -119,7 +119,7 @@ angular.module('shellApp')
           widgetToDip(widget, dip);
         }
 
-        nachosApi.saveAppConfig(config, function(err){
+        nachosApi.saveAppConfig('shell', config, function(err){
           if(err) {
             $log.log(err);
           }
@@ -128,7 +128,7 @@ angular.module('shellApp')
     };
 
     this.getWorkspaces = function(callback){
-      nachosApi.getAppConfig(function (err, config) {
+      nachosApi.getAppConfig('shell', function (err, config) {
         if (err) {
           callback(err);
           return $log.log(err);

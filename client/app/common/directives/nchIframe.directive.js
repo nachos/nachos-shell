@@ -13,7 +13,8 @@ angular.module('shellApp')
         var path = require('path');
 
         ele.attr('src', scope.src);
-        ele[0].contentWindow.require = function (id) {
+        var content = ele[0].contentWindow;
+        content.require = function (id) {
           var dipPath = path.dirname(scope.src);
 
           // Need to cover all cases
@@ -27,6 +28,8 @@ angular.module('shellApp')
 
           return require(id);
         };
+
+        content.nachosApi = require('nachos-api');
       }
     };
   });

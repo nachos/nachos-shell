@@ -12,7 +12,7 @@ angular.module('movieListApp')
 
     var sortMovies = function (movies) {
       return _.sortBy(movies, function (movie) {
-        return movie.imdbRating;
+        return movie.response.imdbRating;
       })
         .reverse();
     };
@@ -21,7 +21,7 @@ angular.module('movieListApp')
       var deferred = Q.defer();
       if (!chosenMovie.backdrop) {
         $scope.loading = true;
-        movieInfo(chosenMovie.Title, function (err, res) {
+        movieInfo(chosenMovie.response.Title, function (err, res) {
           if (err) {
             deferred.reject(err);
           } else {
@@ -38,7 +38,7 @@ angular.module('movieListApp')
 
     $scope.chooseMovie = function (chosenMovie) {
       console.log(chosenMovie);
-      $timeout(function () {
+      /*$timeout(function () {
 
         var movieIndex = _.findIndex($scope.movies, function (movie) {
           return movie === chosenMovie;
@@ -51,7 +51,8 @@ angular.module('movieListApp')
         }
 
         $scope.movies = sortMovies($scope.movies);
-      });
+        $scope.chosenMovie = chosenMovie;
+      });*/
 
       getBackdrop(chosenMovie)
         .then(function () {
@@ -62,22 +63,21 @@ angular.module('movieListApp')
         });
     };
 
-    movieList.listFolder('E:\\Movies', function (err, listData) {
+    $scope.playChosen = function () {
+      nachosApi.fs.open($scope.chosenMovie.path);
+    };
+
+    movieList.listFolder('D:\\Videos\\Movies', function (err, listData) {
       if (err) {
         return console.log(err);
       }
 
-      listData =_.map(listData.succeeded, function (item){
-        return item.response;
+      $timeout(function () {
+        $scope.movies = sortMovies(listData.succeeded);
+
+        var mostRanked = _.first($scope.movies);
+
+        $scope.chooseMovie(mostRanked);
       });
-
-      console.log(listData);
-
-      $scope.movies = sortMovies(listData);
-
-      var mostRanked = _.first($scope.movies);
-
-      $scope.chooseMovie(mostRanked);
-
     });
   });
