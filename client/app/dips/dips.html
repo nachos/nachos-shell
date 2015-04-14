@@ -1,7 +1,9 @@
 <div ng-controller="DipsController">
   <div gridster="grid.settings">
     <div ng-repeat="widget in widgets" gridster-item="widget" class="md-whiteframe-z1" >
-      <div class="foreground" ng-show="grid.editMode" ng-class="{ enabled: grid.editMode }"></div>
+      <div layout="row" layout-align="end" class="foreground" ng-show="grid.editMode" ng-class="{ enabled: grid.editMode }">
+        <i class="mdi mdi-settings big-icon" ng-click="openWidgetSettings(widget)"></i>
+      </div>
       <nch-iframe src="widget.path" class="widget"></nch-iframe>
     </div>
   </div>

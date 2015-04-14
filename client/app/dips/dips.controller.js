@@ -24,6 +24,10 @@ angular.module('shellApp')
       renderWidgets();
     });
 
+    $scope.openWidgetSettings = function(widget){
+      // Open this particular dip in the nachos-settings
+    };
+
     function renderWidgets(){
       workspaces.getWidgets(function (err, widgets) {
         $scope.widgets = widgets;

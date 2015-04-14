@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('movieListApp')
-  .controller('MovieListController', function ($scope, $timeout) {
+  .controller('MovieListController', function ($scope, $timeout, $log) {
     var movieList = require('movie-list');
     var movieInfo = require('movie-info');
     var _ = require('lodash');
@@ -67,17 +67,25 @@ angular.module('movieListApp')
       nachosApi.fs.open($scope.chosenMovie.path);
     };
 
-    movieList.listFolder('D:\\Videos\\Movies', function (err, listData) {
-      if (err) {
-        return console.log(err);
+    nachosApi.getAppConfig('movie-list', function (err, config){
+      if (err)
+      {
+        // Deal with this error somehow.. maybe move to settings screen
+        $log.log(err);
       }
 
-      $timeout(function () {
-        $scope.movies = sortMovies(listData.succeeded);
+      movieList.listFolder(config.movieDirectory, function (err, listData) {
+        if (err) {
+          return console.log(err);
+        }
 
-        var mostRanked = _.first($scope.movies);
+        $timeout(function () {
+          $scope.movies = sortMovies(listData.succeeded);
 
-        $scope.chooseMovie(mostRanked);
+          var mostRanked = _.first($scope.movies);
+
+          $scope.chooseMovie(mostRanked);
+        });
       });
     });
   });
