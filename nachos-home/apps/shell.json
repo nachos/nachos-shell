@@ -43,12 +43,12 @@
       "dips": [
         {
           "id": 4,
-          "name": "float-text",
+          "name": "translation",
           "layout": {
-            "x": 100,
-            "y": 100,
-            "width": 5,
-            "height": 5
+            "x": 10,
+            "y": 5,
+            "width": 9,
+            "height": 6
           }
         },
         {

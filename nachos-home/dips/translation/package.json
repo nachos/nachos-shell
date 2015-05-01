@@ -1,0 +1,15 @@
+{
+  "name": "translation-dip",
+  "version": "0.0.0",
+  "description": "",
+  "repository": {
+    "type": "git"
+  },
+  "author": "Nachos team",
+  "license": "MIT",
+  "bugs": {},
+  "devDependencies": {},
+  "dependencies": {
+    "yandex-translate": "^1.0.1"
+  }
+}
