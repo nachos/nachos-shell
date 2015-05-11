@@ -67,7 +67,7 @@ angular.module('movieListApp')
       nachosApi.fs.open($scope.chosenMovie.path);
     };
 
-    nachosApi.getAppConfig('movie-list', function (err, config){
+    nachosApi.getConfig('movie-list', function (err, config){
       if (err)
       {
         // Deal with this error somehow.. maybe move to settings screen

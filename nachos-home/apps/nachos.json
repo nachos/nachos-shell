@@ -1,0 +1,12 @@
+{
+  "name": "Nacho Boy",
+  "email": "nacho@gmail.com",
+  "dips": "C:\\Users\\Omri\\.nachos\\dips",
+  "defaults": {
+    "exts": {
+      ".txt": "notepad++.exe",
+      ".js": "notepad++.exe",
+      ".yml": "notepad++.exe"
+    }
+  }
+}
