@@ -64,10 +64,10 @@ angular.module('movieListApp')
     };
 
     $scope.playChosen = function () {
-      nachosApi.fs.open($scope.chosenMovie.path);
+      nachosApi.fs.open({path: $scope.chosenMovie.path});
     };
 
-    nachosApi.getConfig('movie-list', function (err, config){
+    nachosApi.config.get('movie-list', function (err, config){
       if (err)
       {
         // Deal with this error somehow.. maybe move to settings screen
