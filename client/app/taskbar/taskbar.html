@@ -22,8 +22,11 @@
         <span>{{ date | amDateFormat:'DD/MM/YYYY' }}</span>
       </div>
     </div>
-    <div layout="column" layout-align="center center">
-      <i class="mdi mdi-account-circle"></i>
+    <div layout="column" layout-align="center center" class="user-image">
+      <div class="wrapper">
+        <img ng-if="user" ng-src="data:image/jpeg;base64,{{user.picture}}"/>
+      </div>
+      <i ng-if="!user" class="mdi mdi-account-circle"></i>
     </div>
   </div>
 </div>

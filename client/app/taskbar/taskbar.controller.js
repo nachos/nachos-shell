@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('TaskbarController', function($scope, $timeout, grid, nativeApi, workspaces, windows){
+  .controller('TaskbarController', function($scope, $timeout, grid, nativeApi, workspaces, windows, nachosApi){
     var _ = require('lodash');
     $scope.date = Date.now();
     $scope.grid = grid;
@@ -21,6 +21,10 @@ angular.module('shellApp')
     workspaces.getWorkspacesMeta(function(err, workspaces){
       $scope.workspaces = workspaces;
       $scope.$apply();
+    });
+
+    nachosApi.user.me({}, function (err, user) {
+      $scope.user = user;
     });
 
     $scope.getNumberOfWindowsClass = function (window) {
