@@ -23,7 +23,7 @@ angular.module('shellApp')
       $scope.$apply();
     });
 
-    nachosApi.user.me({}, function (err, user) {
+    nachosApi.user.me(function (err, user) {
       $scope.user = user;
     });
 
