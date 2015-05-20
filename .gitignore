@@ -4,3 +4,5 @@ client/bower_components
 client/.tmp
 build
 nachos-home/dips/**/**/bower_components/**/*
+**/bower_components/
+**/node_modules/
