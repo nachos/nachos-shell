@@ -2,11 +2,12 @@
 
 angular.module('shellApp')
   .controller('DipsController', function ($scope, $mdDialog, $rootScope, grid, workspaces) {
+    var path = require('path');
+    var _ = require('lodash');
+
     $scope.dips = [];
 
     $scope.grid = grid;
-
-    renderWidgets();
 
     $scope.addWidget = function (ev) {
       $mdDialog.show({
@@ -14,24 +15,37 @@ angular.module('shellApp')
         templateUrl: 'app/dips/add-dip/add-dip.html',
         targetEvent: ev
       })
-      .then(function (widget) {
-        $scope.widgets.push(widget);
-        workspaces.addNewWidget(widget);
-      });
+        .then(function (widget) {
+          $scope.widgets.push(widget);
+          workspaces.addNewWidget(widget);
+        });
     };
 
-    $rootScope.$on('refreshWorkspace', function(){
+    $rootScope.$on('refreshWorkspace', function () {
       renderWidgets();
     });
 
-    $scope.openWidgetSettings = function(widget){
+    $scope.openWidgetSettings = function (widget) {
       // Open this particular dip in the nachos-settings
     };
 
-    function renderWidgets(){
+    function renderWidgets() {
       workspaces.getWidgets(function (err, widgets) {
+        _.forEach(widgets, function (widget) {
+          widget.content = getIframeContent(widget.path);
+        });
+
         $scope.widgets = widgets;
         $scope.$apply();
       });
     }
+
+     function getIframeContent(src){
+      return {
+        require: require('relative-require')(src),
+        nachosApi: require('nachos-api')
+      };
+    }
+
+    renderWidgets();
   });

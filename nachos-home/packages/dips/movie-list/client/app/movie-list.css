@@ -3,9 +3,10 @@ body {
   width: 100%;
   height: 100%;
   margin: 0;
+  background-color: transparent;
 }
 
-.movie-list {
+.movie-list, .settings {
   height: 100%;
   overflow: hidden;
 }
@@ -27,7 +28,6 @@ body {
   background: white;
   opacity: 1;
 }
-
 
 .movie-list .chosen-movie .loader.ng-hide-add.ng-hide-add-active,
 .movie-list .chosen-movie .loader.ng-hide-remove.ng-hide-remove-active {
@@ -87,6 +87,8 @@ body {
 .movie-list .other-movies .title .md-button {
   text-align: initial;
 }
+
+.settings #file-input { display: none; }
 
 ::-webkit-scrollbar {
   width: 5px;

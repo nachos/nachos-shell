@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('shellApp', ['ngMaterial', 'gridster', 'angularMoment'])
+angular.module('shellApp', ['ngMaterial', 'gridster', 'angularMoment', 'iframeWrapper'])
   .config(function(){
 
   })

@@ -74,7 +74,7 @@ angular.module('movieListApp')
         $log.log(err);
       }
 
-      movieList.listFolder(config.movieDirectory, function (err, listData) {
+      movieList.listFolder(config.directory, function (err, listData) {
         if (err) {
           return console.log(err);
         }

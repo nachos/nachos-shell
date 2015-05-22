@@ -2,7 +2,15 @@
 <link rel="stylesheet" href="../bower_components/angular-material/angular-material.css" />
 <link rel="stylesheet" href="../bower_components/mdi/css/materialdesignicons.min.css" media="all"  type="text/css" />
 <div ng-app="movieListSettingsApp">
-  <span>hola</span>
+  <div ng-controller="SettingsController" class="settings">
+    <span>Directory: {{config.directory}}</span>
+    <md-button>
+      <label for="file-input">Select</label>
+    </md-button>
+    <input id="file-input" type="file" nwdirectory onchange="angular.element(this).scope().fileChanged(this)">
+
+    <md-button>Save</md-button>
+  </div>
 </div>
 <script src="../bower_components/angular/angular.js"></script>
 <script src="../bower_components/angular-animate/angular-animate.js"></script>
