@@ -9,7 +9,7 @@
     </md-button>
     <input id="file-input" type="file" nwdirectory onchange="angular.element(this).scope().fileChanged(this)">
 
-    <md-button>Save</md-button>
+    <md-button ng-click="save()">Save</md-button>
   </div>
 </div>
 <script src="../bower_components/angular/angular.js"></script>
