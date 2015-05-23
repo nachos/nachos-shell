@@ -24,7 +24,7 @@ angular.module('movieListSettingsApp')
           notify(err);
         }
 
-        notify('saved');
+        notify('Changes saved!');
       });
     };
 
@@ -32,13 +32,7 @@ angular.module('movieListSettingsApp')
       $mdToast.show(
         $mdToast.simple()
           .content(msg)
-          .position({
-            bottom: true,
-            top: false,
-            left: false,
-            right: true
-          })
-          .hideDelay(3000)
+          .position('bottom right')
       );
     }
   });

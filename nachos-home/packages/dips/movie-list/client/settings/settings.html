@@ -2,14 +2,20 @@
 <link rel="stylesheet" href="../bower_components/angular-material/angular-material.css" />
 <link rel="stylesheet" href="../bower_components/mdi/css/materialdesignicons.min.css" media="all"  type="text/css" />
 <div ng-app="movieListSettingsApp">
-  <div ng-controller="SettingsController" class="settings">
-    <span>Directory: {{config.directory}}</span>
-    <md-button>
+  <div ng-controller="SettingsController" class="settings" layout="column">
+    <div layout="row" layout-align="start center">
+      <md-input-container flex="30">
+        <label>Directory</label>
+        <input ng-model="config.directory" class="directory" disabled/>
+      </md-input-container>
+    <md-button class="md-primary">
       <label for="file-input">Select</label>
     </md-button>
     <input id="file-input" type="file" nwdirectory onchange="angular.element(this).scope().fileChanged(this)">
-
-    <md-button ng-click="save()">Save</md-button>
+    </div>
+    <div layout="row">
+      <md-button class="md-primary" ng-click="save()">Save</md-button>
+    </div>
   </div>
 </div>
 <script src="../bower_components/angular/angular.js"></script>
