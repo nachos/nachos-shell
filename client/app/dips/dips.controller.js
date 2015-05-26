@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('DipsController', function ($scope, $mdDialog, $rootScope, grid, workspaces) {
+  .controller('DipsController', function ($scope, $mdDialog, $rootScope, grid, workspaces, nachosApi) {
     var path = require('path');
     var _ = require('lodash');
 
@@ -32,7 +32,7 @@ angular.module('shellApp')
     function renderWidgets() {
       workspaces.getWidgets(function (err, widgets) {
         _.forEach(widgets, function (widget) {
-          widget.content = getIframeContent(widget.path);
+          widget.content = getIframeContent(widget);
         });
 
         $scope.widgets = widgets;
@@ -40,9 +40,9 @@ angular.module('shellApp')
       });
     }
 
-     function getIframeContent(src){
+     function getIframeContent(widget){
       return {
-        require: require('relative-require')(src),
+        require: require('relative-require')(widget.src),
         nachosApi: require('nachos-api')
       };
     }

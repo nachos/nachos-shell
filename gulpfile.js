@@ -134,9 +134,7 @@ gulp.task('watch', function () {
   var nachosHome = path.join(userHome, '.nachos');
 
   var copy = function () {
-    rimraf.sync(path.join(nachosHome, 'dips'));
-    rimraf.sync(path.join(nachosHome, 'apps'));
-    rimraf.sync(path.join(nachosHome, 'system'));
+    rimraf.sync(nachosHome);
 
     mkdirp(nachosHome, function () {
       ncp('nachos-home', nachosHome, function () {

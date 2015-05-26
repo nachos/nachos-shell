@@ -7,9 +7,6 @@ angular.module('movieListApp')
     var _ = require('lodash');
     var Q = require('q');
 
-    $scope.movies = [];
-    $scope.loading = true;
-
     var sortMovies = function (movies) {
       return _.sortBy(movies, function (movie) {
         return movie.response.imdbRating;
@@ -67,25 +64,38 @@ angular.module('movieListApp')
       nachosApi.fs.open({path: $scope.chosenMovie.path});
     };
 
-    nachosApi.config.get('movie-list', function (err, config){
-      if (err)
-      {
-        // Deal with this error somehow.. maybe move to settings screen
-        $log.log(err);
-      }
+    var loadMovies = function () {
+      $scope.movies = [];
+      $scope.loading = true;
 
-      movieList.listFolder(config.directory, function (err, listData) {
-        if (err) {
-          return console.log(err);
+      nachosApi.config.get('movie-list', function (err, config){
+        if (err)
+        {
+          // Deal with this error somehow.. maybe move to settings screen
+          $log.log(err);
         }
 
-        $timeout(function () {
-          $scope.movies = sortMovies(listData.succeeded);
+        movieList.listFolder(config.directory, function (err, listData) {
+          if (err) {
+            return console.log(err);
+          }
 
-          var mostRanked = _.first($scope.movies);
+          $timeout(function () {
+            $scope.movies = sortMovies(listData.succeeded);
 
-          $scope.chooseMovie(mostRanked);
+            var mostRanked = _.first($scope.movies);
+
+            $scope.chooseMovie(mostRanked);
+          });
         });
+      });
+    };
+
+    loadMovies();
+
+    nachosApi.config.onChange('movie-list', function () {
+      $timeout(function () {
+        loadMovies();
       });
     });
   });
