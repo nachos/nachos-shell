@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('DipsController', function ($scope, $mdDialog, $rootScope, grid, workspaces, nachosApi) {
+  .controller('DipsController', function ($scope, $mdDialog, $rootScope, grid, workspaces) {
     var path = require('path');
     var _ = require('lodash');
 
@@ -41,9 +41,29 @@ angular.module('shellApp')
     }
 
      function getIframeContent(widget){
-      return {
-        require: require('relative-require')(widget.src),
-        nachosApi: require('nachos-api')
+       var nachosApi = require('nachos-api');
+
+       var api = {
+         get: function (callback) {
+           nachosApi.configs.getInstance(widget.name, widget.id, callback);
+         },
+         save: function (config, callback) {
+           nachosApi.configs.saveInstance(widget.name, widget.id, config, callback);
+         },
+         onGlobalChange: function (callback) {
+           nachosApi.configs.onGlobalChange(widget.name, callback);
+         },
+         onInstanceChange: function (callback) {
+           nachosApi.configs.onInstanceChange(widget.id, callback);
+         }
+       };
+
+       // TODO: Remove later after nachos-api is published
+       api.fs = nachosApi.fs;
+
+       return {
+        require: require('relative-require')(widget.path),
+        dipApi: api
       };
     }
 

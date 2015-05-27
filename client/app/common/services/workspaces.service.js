@@ -54,7 +54,7 @@ angular.module('shellApp')
           return $log.log(err);
         }
 
-        nachosApi.config.get('shell', function (err, config) {
+        nachosApi.configs.getGlobal('shell', function (err, config) {
           if (err) {
             callback(err);
             return $log.log(err);
@@ -69,7 +69,7 @@ angular.module('shellApp')
 
     var workspaceToDips = function (workspace, callback) {
       async.map(workspace.dips, function (dipSettings, callback) {
-        nachosApi.config.dips.get(dipSettings.name, function (err, dip) {
+        nachosApi.dips.get(dipSettings.name, function (err, dip) {
           if (err) {
             callback(null, null);
             return $log.log('error loading dip %s - %s', dipSettings.name, err);
@@ -90,7 +90,7 @@ angular.module('shellApp')
 
     this.addNewWidget = function(widget){
       // Find a better way to assign dip ids
-      nachosApi.config.get('shell', function(err, config){
+      nachosApi.configs.getGlobal('shell', function(err, config){
         if (err) {
           return $log.log(err);
         }
@@ -105,7 +105,7 @@ angular.module('shellApp')
     };
 
     this.saveWidgetLayout = function(widget) {
-      nachosApi.config.get('shell', function (err, config) {
+      nachosApi.configs.getGlobal('shell', function (err, config) {
         if (err) {
           return $log.log(err);
         }
@@ -119,7 +119,7 @@ angular.module('shellApp')
           widgetToDip(widget, dip);
         }
 
-        nachosApi.config.save('shell', config, function(err){
+        nachosApi.configs.saveGlobal('shell', config, function(err){
           if(err) {
             $log.log(err);
           }
@@ -128,7 +128,7 @@ angular.module('shellApp')
     };
 
     this.getWorkspaces = function(callback){
-      nachosApi.config.get('shell', function (err, config) {
+      nachosApi.configs.getGlobal('shell', function (err, config) {
         if (err) {
           callback(err);
           return $log.log(err);

@@ -1,3 +1,13 @@
 {
-  "directory" : "E:\\Movies"
+  "global": {
+    "test": "test"
+  },
+  "instances": {
+    "8177a354-9d11-4283-8fcc-0b5cd67ae311": {
+      "directory" : "E:\\Movies"
+    },
+    "7b17f5dd-bed1-4453-acf4-67ce5c5c2cdd": {
+      "directory" : "E:\\Downloads"
+    }
+  }
 }

@@ -37,19 +37,19 @@ angular.module('movieListApp')
       console.log(chosenMovie);
       /*$timeout(function () {
 
-        var movieIndex = _.findIndex($scope.movies, function (movie) {
-          return movie === chosenMovie;
-        });
+       var movieIndex = _.findIndex($scope.movies, function (movie) {
+       return movie === chosenMovie;
+       });
 
-        $scope.movies.splice(movieIndex, 1);
+       $scope.movies.splice(movieIndex, 1);
 
-        if ($scope.chosenMovie) {
-          $scope.movies.push($scope.chosenMovie);
-        }
+       if ($scope.chosenMovie) {
+       $scope.movies.push($scope.chosenMovie);
+       }
 
-        $scope.movies = sortMovies($scope.movies);
-        $scope.chosenMovie = chosenMovie;
-      });*/
+       $scope.movies = sortMovies($scope.movies);
+       $scope.chosenMovie = chosenMovie;
+       });*/
 
       getBackdrop(chosenMovie)
         .then(function () {
@@ -61,41 +61,39 @@ angular.module('movieListApp')
     };
 
     $scope.playChosen = function () {
-      nachosApi.fs.open({path: $scope.chosenMovie.path});
+      dipApi.fs.open({path: $scope.chosenMovie.path});
     };
 
-    var loadMovies = function () {
+    var loadMovies = function (config) {
       $scope.movies = [];
       $scope.loading = true;
 
-      nachosApi.config.get('movie-list', function (err, config){
-        if (err)
-        {
-          // Deal with this error somehow.. maybe move to settings screen
-          $log.log(err);
+      movieList.listFolder(config.instance.directory, function (err, listData) {
+        if (err) {
+          return console.log(err);
         }
 
-        movieList.listFolder(config.directory, function (err, listData) {
-          if (err) {
-            return console.log(err);
-          }
+        $timeout(function () {
+          $scope.movies = sortMovies(listData.succeeded);
 
-          $timeout(function () {
-            $scope.movies = sortMovies(listData.succeeded);
+          var mostRanked = _.first($scope.movies);
 
-            var mostRanked = _.first($scope.movies);
-
-            $scope.chooseMovie(mostRanked);
-          });
+          $scope.chooseMovie(mostRanked);
         });
       });
     };
 
-    loadMovies();
+    dipApi.get(function (err, config) {
+      if (err) {
+        // Deal with this error somehow.. maybe move to settings screen
+        $log.log(err);
+      }
+      loadMovies(config);
+    });
 
-    nachosApi.config.onChange('movie-list', function () {
+    dipApi.onInstanceChange(function (config) {
       $timeout(function () {
-        loadMovies();
+        loadMovies(config);
       });
     });
   });
