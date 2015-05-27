@@ -61,7 +61,7 @@ angular.module('movieListApp')
     };
 
     $scope.playChosen = function () {
-      dipApi.fs.open({path: $scope.chosenMovie.path});
+      dipApi.fs.open({},{path: $scope.chosenMovie.path});
     };
 
     var loadMovies = function (config) {
