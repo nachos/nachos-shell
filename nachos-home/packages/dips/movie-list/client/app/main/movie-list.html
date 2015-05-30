@@ -1,0 +1,39 @@
+<div layout="column" class="movie-list" ng-hide="initialLoading">
+  <div class="chosen-movie md-whiteframe-z1" layout="column"
+       style="background-image: url({{ chosenMovie.backdrop }});" flex>
+    <div ng-show="loading" layout-fill layout="column" layout-align="center center" class="loader" flex>
+      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+    <div ng-hide="loading" class="backdrop" layout="column" layout-align="end" flex>
+      <div flex layout="row" layout-align="end start">
+        <md-button ui-sref="settings">
+          <md-tooltip md-direction="left">Settings</md-tooltip>
+          <i class="mdi mdi-dots-vertical settings-button"></i>
+        </md-button>
+      </div>
+      <span class="title">{{ chosenMovie.response.Title }}</span>
+      <div>
+        <span>({{ chosenMovie.response.Year }}) </span>
+        <span class="description">{{ chosenMovie.response.imdbRating }} <i class="mdi mdi-star"></i></span>
+      </div>
+      <md-button class="md-fab md-mini md-primary" ng-click="playChosen()">
+        <i class="mdi mdi-play"></i>
+      </md-button>
+    </div>
+  </div>
+  <div class="other-movies" flex>
+    <div ng-repeat="movie in movies" layout="column">
+      <div layout="row" class="title">
+        <md-button flex ng-click="chooseMovie(movie)">{{ movie.response.Title }} {{ movie.response.imdbRating }} <i
+            class="mdi mdi-star"></i></md-button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="overlay" ng-show="initialLoading"
+     layout="column" layout-align="center center" layout-fill>
+  <div flex="20">
+    <span>Getting movies data</span>
+    <md-progress-linear class="md-accent" md-mode="indeterminate"></md-progress-linear>
+  </div>
+</div>

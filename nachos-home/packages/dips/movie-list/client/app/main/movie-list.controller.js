@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('movieListApp')
-  .controller('MovieListController', function ($scope, $timeout, $log) {
+  .controller('MovieList', function ($scope, $timeout, $log, $mdToast, $state) {
     var movieList = require('movie-list');
     var movieInfo = require('movie-info');
     var _ = require('lodash');
@@ -10,8 +10,7 @@ angular.module('movieListApp')
     var sortMovies = function (movies) {
       return _.sortBy(movies, function (movie) {
         return movie.response.imdbRating;
-      })
-        .reverse();
+      }).reverse();
     };
 
     var getBackdrop = function (chosenMovie) {
@@ -32,6 +31,8 @@ angular.module('movieListApp')
       }
       return deferred.promise;
     };
+
+    $scope.initialLoading = true;
 
     $scope.chooseMovie = function (chosenMovie) {
       console.log(chosenMovie);
@@ -61,10 +62,10 @@ angular.module('movieListApp')
     };
 
     $scope.playChosen = function () {
-      dipApi.fs.open({},{path: $scope.chosenMovie.path});
+      dipApi.fs.open({}, {path: $scope.chosenMovie.path});
     };
 
-    var loadMovies = function (config) {
+    var loadMovies = function (config, cb) {
       $scope.movies = [];
       $scope.loading = true;
 
@@ -73,12 +74,24 @@ angular.module('movieListApp')
           return console.log(err);
         }
 
+        if(!listData.succeeded) {
+          $mdToast.show(
+            $mdToast.simple()
+              .content('Empty movie directory')
+              .position('bottom right')
+          );
+
+          $state.go('settings');
+        }
+
         $timeout(function () {
           $scope.movies = sortMovies(listData.succeeded);
 
           var mostRanked = _.first($scope.movies);
 
           $scope.chooseMovie(mostRanked);
+
+          cb();
         });
       });
     };
@@ -88,7 +101,9 @@ angular.module('movieListApp')
         // Deal with this error somehow.. maybe move to settings screen
         $log.log(err);
       }
-      loadMovies(config);
+      loadMovies(config, function () {
+        $scope.initialLoading = false;
+      });
     });
 
     dipApi.onInstanceChange(function (config) {
