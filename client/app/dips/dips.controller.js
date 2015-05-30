@@ -16,6 +16,7 @@ angular.module('shellApp')
         targetEvent: ev
       })
         .then(function (widget) {
+          widget.content = getIframeContent(widget);
           $scope.widgets.push(widget);
           workspaces.addNewWidget(widget);
         });

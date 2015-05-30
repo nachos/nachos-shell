@@ -69,17 +69,17 @@ angular.module('movieListApp')
       $scope.movies = [];
       $scope.loading = true;
 
+      if(!config.instance) {
+        $state.go('settings');
+      }
+
       movieList.listFolder(config.instance.directory, function (err, listData) {
         if (err) {
           return console.log(err);
         }
 
         if(!listData.succeeded) {
-          $mdToast.show(
-            $mdToast.simple()
-              .content('Empty movie directory')
-              .position('bottom right')
-          );
+          notify('Empty movie directory');
 
           $state.go('settings');
         }
@@ -95,6 +95,14 @@ angular.module('movieListApp')
         });
       });
     };
+
+    function notify (msg) {
+      $mdToast.show(
+        $mdToast.simple()
+          .content(msg)
+          .position('bottom right')
+      );
+    }
 
     dipApi.get(function (err, config) {
       if (err) {

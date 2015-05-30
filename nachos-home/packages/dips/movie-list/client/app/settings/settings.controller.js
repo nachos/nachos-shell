@@ -22,6 +22,9 @@ angular.module('movieListApp')
 
     $scope.fileChanged = function (ele) {
       $timeout(function () {
+        if(!$scope.config.instance) {
+          $scope.config.instance = {};
+        }
         $scope.config.instance.directory = ele.files[0].path;
       });
     };
