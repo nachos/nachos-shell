@@ -7,6 +7,7 @@ angular.module('movieListSettingsApp')
         notify(err);
       }
 
+      console.log(config);
       $timeout(function () {
         $scope.config = config;
       });

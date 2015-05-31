@@ -69,7 +69,7 @@ angular.module('shellApp')
 
     var workspaceToDips = function (workspace, callback) {
       async.map(workspace.dips, function (dipSettings, callback) {
-        nachosApi.dips.get(dipSettings.name, function (err, dip) {
+        nachosApi.packages.getDip(dipSettings.name, function (err, dip) {
           if (err) {
             callback(null, null);
             return $log.log('error loading dip %s - %s', dipSettings.name, err);

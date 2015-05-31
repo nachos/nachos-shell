@@ -66,37 +66,40 @@ angular.module('movieListApp')
     };
 
     var loadMovies = function (config, cb) {
-      $scope.movies = [];
-      $scope.loading = true;
 
-      if(!config.instance) {
+      if (!config.instance) {
         $state.go('settings');
       }
 
-      movieList.listFolder(config.instance.directory, function (err, listData) {
-        if (err) {
-          return console.log(err);
-        }
+      if (!$scope.movies) {
+        $scope.movies = [];
+        $scope.loading = true;
 
-        if(!listData.succeeded) {
-          notify('Empty movie directory');
+        movieList.listFolder(config.instance.directory, function (err, listData) {
+          if (err) {
+            return console.log(err);
+          }
 
-          $state.go('settings');
-        }
+          if (!listData.succeeded) {
+            notify('Empty movie directory');
 
-        $timeout(function () {
-          $scope.movies = sortMovies(listData.succeeded);
+            $state.go('settings');
+          }
 
-          var mostRanked = _.first($scope.movies);
+          $timeout(function () {
+            $scope.movies = sortMovies(listData.succeeded);
 
-          $scope.chooseMovie(mostRanked);
+            var mostRanked = _.first($scope.movies);
 
-          cb();
+            $scope.chooseMovie(mostRanked);
+
+            cb();
+          });
         });
-      });
+      }
     };
 
-    function notify (msg) {
+    function notify(msg) {
       $mdToast.show(
         $mdToast.simple()
           .content(msg)
@@ -118,5 +121,9 @@ angular.module('movieListApp')
       $timeout(function () {
         loadMovies(config);
       });
+    });
+
+    dipApi.onGlobalChange(function (config) {
+      notify('hi');
     });
   });

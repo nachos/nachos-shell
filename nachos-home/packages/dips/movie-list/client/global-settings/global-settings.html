@@ -5,13 +5,13 @@
   <div ng-controller="SettingsController" class="settings" layout="column">
     <div layout="row" layout-align="start center">
       <md-input-container flex="30">
-        <label>Directory</label>
-        <input ng-model="config.directory" class="directory" disabled/>
+        <label>Test</label>
+        <input type="text" ng-model="config.test"/>
       </md-input-container>
-    <md-button class="md-primary">
-      <label for="file-input">Select</label>
-    </md-button>
-    <input id="file-input" type="file" nwdirectory onchange="angular.element(this).scope().fileChanged(this)">
+    <!--<md-button class="md-primary">-->
+      <!--<label for="file-input">Select</label>-->
+    <!--</md-button>-->
+    <!--<input id="file-input" type="file" nwdirectory onchange="angular.element(this).scope().fileChanged(this)">-->
     </div>
     <div layout="row">
       <md-button class="md-primary" ng-click="save()">Save</md-button>
@@ -23,4 +23,4 @@
 <script src="../bower_components/angular-aria/angular-aria.js"></script>
 <script src="../bower_components/angular-material/angular-material.js"></script>
 <script src="app.js"></script>
-<script src="settings.contorller.js"></script>
+<script src="global-settings.contorller.js"></script>
