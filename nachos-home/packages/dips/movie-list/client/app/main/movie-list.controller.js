@@ -65,38 +65,36 @@ angular.module('movieListApp')
       dipApi.fs.open({}, {path: $scope.chosenMovie.path});
     };
 
-    var loadMovies = function (config, cb) {
+    var loadMovies = function (cb) {
 
-      if (!config.instance) {
+      if (!$scope.config.instance) {
         $state.go('settings');
       }
 
-      if (!$scope.movies) {
-        $scope.movies = [];
-        $scope.loading = true;
+      $scope.movies = [];
+      $scope.loading = true;
 
-        movieList.listFolder(config.instance.directory, function (err, listData) {
-          if (err) {
-            return console.log(err);
-          }
+      movieList.listFolder($scope.config.instance.directory, function (err, listData) {
+        if (err) {
+          return console.log(err);
+        }
 
-          if (!listData.succeeded) {
-            notify('Empty movie directory');
+        if (!listData.succeeded) {
+          notify('Empty movie directory');
 
-            $state.go('settings');
-          }
+          $state.go('settings');
+        }
 
-          $timeout(function () {
-            $scope.movies = sortMovies(listData.succeeded);
+        $timeout(function () {
+          $scope.movies = sortMovies(listData.succeeded);
 
-            var mostRanked = _.first($scope.movies);
+          var mostRanked = _.first($scope.movies);
 
-            $scope.chooseMovie(mostRanked);
+          $scope.chooseMovie(mostRanked);
 
-            cb();
-          });
+          cb();
         });
-      }
+      });
     };
 
     function notify(msg) {
@@ -112,18 +110,28 @@ angular.module('movieListApp')
         // Deal with this error somehow.. maybe move to settings screen
         $log.log(err);
       }
-      loadMovies(config, function () {
+      $scope.config = config;
+      loadMovies(function () {
         $scope.initialLoading = false;
       });
     });
 
     dipApi.onInstanceChange(function (config) {
+      $scope.config.instance = config;
       $timeout(function () {
-        loadMovies(config);
+        loadMovies();
       });
     });
 
     dipApi.onGlobalChange(function (config) {
-      notify('hi');
+      $scope.config.global = config;
+      $timeout(function () {
+        $scope.initialLoading = true;
+
+        loadMovies(function () {
+          $scope.initialLoading = false;
+        });
+        notify('Global settings changed');
+      });
     });
   });

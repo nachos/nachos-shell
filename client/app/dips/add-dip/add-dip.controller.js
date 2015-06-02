@@ -1,16 +1,18 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('AddDipController', function($scope, $mdDialog, workspaces) {
-    // Shouldn't be workspace - should turn to nachos-api to figure out which dips are installed
-    workspaces.getWidgets(function (err, widgets) {
-      $scope.widgets = widgets;
-      $scope.$apply();
+  .controller('AddDipController', function($scope, $mdDialog) {
+    var nachosApi = require('nachos-api');
+    var path = require('path');
+    var uuid = require('node-uuid');
+
+    nachosApi.packages.getByType('dips', true, function (err, dips) {
+      $scope.widgets = dips;
     });
 
     $scope.add = function (widget) {
-      delete widget.col;
-      delete widget.row;
+      widget.id = uuid.v4();
+      widget.path = path.join(widget.path, widget.config.main);
       $mdDialog.hide(widget);
     }
   });

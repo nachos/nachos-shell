@@ -95,11 +95,6 @@ angular.module('shellApp')
           return $log.log(err);
         }
 
-        var maxWorkspace = _.max(config.workspaces, function(workspace){
-          return _.max(workspace.dips, 'id').id;
-        });
-
-        widget.id = _.max(maxWorkspace.dips, 'id').id + 1;
         self.saveWidgetLayout(widget);
       });
     };
@@ -153,7 +148,7 @@ angular.module('shellApp')
       });
     };
 
-    this.getWidgets = function(callback){
+    this.getWidgets = function(callback) {
       if (activeWorkspace) {
         workspaceToDips(activeWorkspace, callback);
       } else {

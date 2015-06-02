@@ -14,9 +14,7 @@ angular.module('movieListApp')
 
     dipApi.onInstanceChange(function (config) {
       $timeout(function () {
-        $timeout(function () {
-          $scope.config = config;
-        });
+        $scope.config = config;
       });
     });
 
