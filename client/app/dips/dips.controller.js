@@ -41,28 +41,48 @@ angular.module('shellApp')
       });
     }
 
-     function getIframeContent(widget){
-       var nachosApi = require('nachos-api');
+    function getIframeContent(widget) {
+      var nachosApi = require('nachos-api');
+      var async = require('async');
 
-       var api = {
-         get: function (callback) {
-           nachosApi.configs.getInstance(widget.name, widget.id, callback);
-         },
-         save: function (config, callback) {
-           nachosApi.configs.saveInstance(widget.name, widget.id, config, callback);
-         },
-         onGlobalChange: function (callback) {
-           nachosApi.configs.onGlobalChange(widget.name, callback);
-         },
-         onInstanceChange: function (callback) {
-           nachosApi.configs.onInstanceChange(widget.id, callback);
-         }
-       };
+      var settings = nachosApi.settings(widget.name);
+      var instance = settings.instance(widget.id);
 
-       // TODO: Remove later after nachos-api is published
-       api.fs = nachosApi.fs;
+      var api = {
+        get: function (cb) {
+          async.parallel({
+              global: function (callback) {
+                settings.get(callback);
+              },
+              instance: function (callback) {
+                instance.get(callback);
+              }
+            },
+            cb);
+        },
+        save: function(config, cb) {
+          async.parallel({
+              global: function (callback) {
+                settings.save(config.global, callback);
+              },
+              instance: function (callback) {
+                instance.save(config.instance, callback);
+              }
+            },
+            cb);
+        },
+        onGlobalChange: function (callback) {
+          nachosApi.settings(widget.name).onChange(widget.name, callback);
+        },
+        onInstanceChange: function (callback) {
+          //nachosApi.settings(widget.name).instance(widget.id).onChange(callback);
+        }
+      };
 
-       return {
+      // TODO: Remove later after nachos-api is published
+      api.fs = nachosApi.fs;
+
+      return {
         require: require('relative-require')(widget.path),
         dipApi: api
       };
