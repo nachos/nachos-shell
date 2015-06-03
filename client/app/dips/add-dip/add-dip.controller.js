@@ -6,7 +6,7 @@ angular.module('shellApp')
     var path = require('path');
     var uuid = require('node-uuid');
 
-    nachosApi.packages.getByType('dips', true, function (err, dips) {
+    nachosApi.packages.getByType('dip', true, function (err, dips) {
       $scope.widgets = dips;
     });
 

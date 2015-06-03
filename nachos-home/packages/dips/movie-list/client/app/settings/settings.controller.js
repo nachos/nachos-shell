@@ -2,17 +2,29 @@
 
 angular.module('movieListApp')
   .controller('Settings', function ($scope, $timeout, $mdToast, $state) {
-    dipApi.get(function (err, config) {
+    $scope.config = {};
+
+    dipApi.global.get(function (err, config) {
       if(err){
         notify(err);
       }
 
       $timeout(function () {
-        $scope.config = config;
+        $scope.config.global = config;
       });
     });
 
-    dipApi.onInstanceChange(function (config) {
+    dipApi.instance.get(function (err, config) {
+      if(err){
+        notify(err);
+      }
+
+      $timeout(function () {
+        $scope.config.instance = config;
+      });
+    });
+
+    dipApi.instance.onChange(function (config) {
       $timeout(function () {
         $scope.config = config;
       });
@@ -28,7 +40,7 @@ angular.module('movieListApp')
     };
 
     $scope.save = function () {
-      dipApi.save($scope.config, function (err) {
+      dipApi.instance.save($scope.config.instance, function (err) {
         if(err){
           notify(err);
         }

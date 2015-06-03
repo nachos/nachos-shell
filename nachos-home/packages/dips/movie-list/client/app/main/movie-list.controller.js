@@ -105,25 +105,35 @@ angular.module('movieListApp')
       );
     }
 
-    dipApi.get(function (err, config) {
+    $scope.config = {};
+
+    dipApi.global.get(function (err, config) {
       if (err) {
         // Deal with this error somehow.. maybe move to settings screen
         $log.log(err);
       }
-      $scope.config = config;
-      loadMovies(function () {
-        $scope.initialLoading = false;
+      $scope.config.global = config;
+
+      dipApi.instance.get(function (err, config) {
+        if (err) {
+          // Deal with this error somehow.. maybe move to settings screen
+          $log.log(err);
+        }
+        $scope.config.instance = config;
+        loadMovies(function () {
+          $scope.initialLoading = false;
+        });
       });
     });
 
-    dipApi.onInstanceChange(function (config) {
+    dipApi.instance.onChange(function (config) {
       $scope.config.instance = config;
       $timeout(function () {
         loadMovies();
       });
     });
 
-    dipApi.onGlobalChange(function (config) {
+    dipApi.global.onChange(function (config) {
       $scope.config.global = config;
       $timeout(function () {
         $scope.initialLoading = true;

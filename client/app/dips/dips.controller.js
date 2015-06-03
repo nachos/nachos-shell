@@ -49,33 +49,27 @@ angular.module('shellApp')
       var instance = settings.instance(widget.id);
 
       var api = {
-        get: function (cb) {
-          async.parallel({
-              global: function (callback) {
-                settings.get(callback);
-              },
-              instance: function (callback) {
-                instance.get(callback);
-              }
-            },
-            cb);
+        global: {
+          get: function (callback) {
+            settings.get(callback);
+          },
+          save: function (config, callback) {
+            settings.save(config, callback);
+          },
+          onChange: function (callback) {
+            nachosApi.settings(widget.name).onChange(callback);
+          }
         },
-        save: function(config, cb) {
-          async.parallel({
-              global: function (callback) {
-                settings.save(config.global, callback);
-              },
-              instance: function (callback) {
-                instance.save(config.instance, callback);
-              }
-            },
-            cb);
-        },
-        onGlobalChange: function (callback) {
-          nachosApi.settings(widget.name).onChange(widget.name, callback);
-        },
-        onInstanceChange: function (callback) {
-          //nachosApi.settings(widget.name).instance(widget.id).onChange(callback);
+        instance: {
+          get: function (callback) {
+            instance.get(callback);
+          },
+          save: function (config, callback) {
+            instance.save(config, callback);
+          },
+          onChange: function (callback) {
+            nachosApi.settings(widget.name).instance(widget.id).onChange(callback);
+          }
         }
       };
 
