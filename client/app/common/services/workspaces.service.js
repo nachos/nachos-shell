@@ -6,7 +6,10 @@ angular.module('shellApp')
     var _ = require('lodash');
     var async = require('async');
     var path = require('path');
+    var Packages = require('nachos-packages');
     var activeWorkspace;
+
+    var packages = new Packages();
 
     var dipToWidget = function(dip, dipSettings){
       dip.id = dipSettings.id;
@@ -69,7 +72,7 @@ angular.module('shellApp')
 
     var workspaceToDips = function (workspace, callback) {
       async.map(workspace.dips, function (dipSettings, callback) {
-        nachosApi.packages.getDip(dipSettings.name, function (err, dip) {
+        packages.getDip(dipSettings.name, function (err, dip) {
           if (err) {
             callback(null, null);
             return $log.log('error loading dip %s - %s', dipSettings.name, err);

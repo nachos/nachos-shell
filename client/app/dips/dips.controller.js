@@ -43,7 +43,6 @@ angular.module('shellApp')
 
     function getIframeContent(widget) {
       var nachosApi = require('nachos-api');
-      var async = require('async');
 
       var settings = nachosApi.settings(widget.name);
       var instance = settings.instance(widget.id);
