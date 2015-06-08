@@ -3,5 +3,6 @@
     <div ng-repeat="widget in widgets">
       <md-button ng-click="add(widget)">{{ widget.name }}</md-button>
     </div>
+    <span ng-if="!widgets.length">no dips</span>
   </div>
 </md-dialog>
