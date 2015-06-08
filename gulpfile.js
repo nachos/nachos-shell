@@ -129,31 +129,6 @@ gulp.task('serve', function (cb) {
     cb);
 });
 
-gulp.task('watch', function () {
-  var userHome = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
-  var nachosHome = path.join(userHome, '.nachos');
-
-  var copy = function () {
-    rimraf.sync(nachosHome);
-
-    mkdirp(nachosHome, function () {
-      ncp('nachos-home', nachosHome, function () {
-        console.log('Copied successfully');
-      });
-    });
-  };
-
-  copy();
-  return gulp.watch([
-      'nachos-home/**/*'
-    ],
-    function (event) {
-      console.log('nachos-home changed!');
-      // No native api so write it hard coded..
-      copy();
-    });
-});
-
 gulp.task('serve:dist', function (cb) {
   runSequence(
     'build',

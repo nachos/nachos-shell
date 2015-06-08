@@ -1,7 +1,0 @@
-{
-  "name": "translation",
-  "version": "0.0.0",
-  "type": "dip",
-  "main": "index.html",
-  "layout": "widget"
-}
