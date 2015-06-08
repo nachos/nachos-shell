@@ -44,31 +44,40 @@ angular.module('shellApp')
     function getIframeContent(widget) {
       var nachosApi = require('nachos-api');
 
-      var settings = nachosApi.settings(widget.name);
-      var instance = settings.instance(widget.id);
-
       var api = {
-        global: {
-          get: function (callback) {
-            settings.get(callback);
-          },
-          save: function (config, callback) {
-            settings.save(config, callback);
-          },
-          onChange: function (callback) {
-            nachosApi.settings(widget.name).onChange(callback);
-          }
+        global: function (globalDefaults) {
+          var settings = nachosApi.settings(widget.name, {
+            globalDefaults: globalDefaults
+          });
+
+          return {
+            get: function (callback) {
+              settings.get(callback);
+            },
+            save: function (config, callback) {
+              settings.save(config, callback);
+            },
+            onChange: function (callback) {
+              settings.onChange(callback);
+            }
+          };
         },
-        instance: {
-          get: function (callback) {
-            instance.get(callback);
-          },
-          save: function (config, callback) {
-            instance.save(config, callback);
-          },
-          onChange: function (callback) {
-            nachosApi.settings(widget.name).instance(widget.id).onChange(callback);
-          }
+        instance: function (instanceDefaults) {
+          var instance = nachosApi.settings(widget.name).instance(widget.id, {
+            instanceDefaults: instanceDefaults
+          });
+
+          return {
+            get: function (callback) {
+              instance.get(callback);
+            },
+            save: function (config, callback) {
+              instance.save(config, callback);
+            },
+            onChange: function (callback) {
+              instance.onChange(callback);
+            }
+          };
         }
       };
 

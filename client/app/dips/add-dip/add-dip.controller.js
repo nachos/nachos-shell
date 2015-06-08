@@ -2,11 +2,13 @@
 
 angular.module('shellApp')
   .controller('AddDipController', function($scope, $mdDialog) {
-    var nachosApi = require('nachos-api');
+    var Packages = require('nachos-packages');
     var path = require('path');
     var uuid = require('node-uuid');
 
-    nachosApi.packages.getByType('dip', true, function (err, dips) {
+    var packages = new Packages();
+
+    packages.getByType('dip', true, function (err, dips) {
       $scope.widgets = dips;
     });
 

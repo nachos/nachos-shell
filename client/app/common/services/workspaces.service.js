@@ -1,15 +1,23 @@
 'use strict';
 
 angular.module('shellApp')
-  .service('workspaces', function($log, $rootScope, nachosApi) {
+  .service('workspaces', function($log, $rootScope, nachosApi, DEFAULT_CONFIG) {
     var self = this;
     var _ = require('lodash');
     var async = require('async');
     var path = require('path');
+    var uuid = require('node-uuid');
     var Packages = require('nachos-packages');
     var activeWorkspace;
 
     var packages = new Packages();
+
+    var defaultconfig = DEFAULT_CONFIG;
+    defaultconfig.workspaces[0].id = uuid.v4();
+
+    var shellSettings = nachosApi.settings('shell', {
+      globalDefaults: defaultconfig
+    });
 
     var dipToWidget = function(dip, dipSettings){
       dip.id = dipSettings.id;
@@ -57,13 +65,13 @@ angular.module('shellApp')
           return $log.log(err);
         }
 
-        nachosApi.settings('shell').get(function (err, config) {
+        shellSettings.get(function (err, config) {
           if (err) {
             callback(err);
             return $log.log(err);
           }
 
-          var active = _.findWhere(workspaces, {id: config.screens.primary});
+          var active = workspaces[0];
 
           return callback(null, active);
         });
@@ -93,17 +101,11 @@ angular.module('shellApp')
 
     this.addNewWidget = function(widget){
       // Find a better way to assign dip ids
-      nachosApi.settings('shell').get(function(err, config){
-        if (err) {
-          return $log.log(err);
-        }
-
-        self.saveWidgetLayout(widget);
-      });
+      self.saveWidgetLayout(widget);
     };
 
     this.saveWidgetLayout = function(widget) {
-      nachosApi.settings('shell').get(function (err, config) {
+      shellSettings.get(function (err, config) {
         if (err) {
           return $log.log(err);
         }
@@ -117,7 +119,7 @@ angular.module('shellApp')
           widgetToDip(widget, dip);
         }
 
-        nachosApi.settings('shell').save(config, function(err){
+        shellSettings.save(config, function(err){
           if(err) {
             $log.log(err);
           }
@@ -126,13 +128,13 @@ angular.module('shellApp')
     };
 
     this.getWorkspaces = function(callback){
-      nachosApi.settings('shell').get(function (err, config) {
+      shellSettings.get(function (err, config) {
         if (err) {
           callback(err);
           return $log.log(err);
         }
 
-        callback(null, config.workspaces || []);
+        callback(null, config.workspaces);
       });
     };
 
