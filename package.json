@@ -1,13 +1,13 @@
 {
-  "name": "nachos-shell",
+  "name": "shell-taco",
   "version": "0.0.0",
-  "description": "The main nachos shell",
+  "description": "The main nachos shell taco",
   "scripts": {
     "test": "gulp test"
   },
   "repository": {
     "layout": "git",
-    "url": "https://github.com/nachos/nachos-shell"
+    "url": "https://github.com/nachos/shell-taco"
   },
   "keywords": [
     "nachos",
@@ -17,9 +17,9 @@
   "author": "Nachos team",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nachos/nachos-shell/issues"
+    "url": "https://github.com/nachos/shell-taco/issues"
   },
-  "homepage": "https://github.com/nachos/nachos-shell",
+  "homepage": "https://github.com/nachos/shell-taco",
   "devDependencies": {
     "del": "^1.1.1",
     "gulp": "^3.8.11",
@@ -44,5 +44,6 @@
     "node-uuid": "^1.4.3",
     "nw": "^0.12.0-1",
     "relative-require": "git://github.com/nachos/relative-require"
-  }
+  },
+  private: true
 }
