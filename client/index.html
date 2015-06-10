@@ -9,17 +9,16 @@
   <link rel="stylesheet" href="bower_components/mdi/css/materialdesignicons.css" />
   <link rel="stylesheet" href="bower_components/mdi/css/materialdesignicons.min.css" />
   <!-- endbower -->
-  <link rel="stylesheet" href=".tmp/app/app.css">
+  <link rel="stylesheet" href="../.tmp/app/app.css">
   <!-- injector:css -->
   <!-- endinjector -->
 </head>
 <body layout="column">
-<div flex class="desktop">
-  <ng-include src="'app/dips/dips.html'"></ng-include>
+<div class="desktop" layout="column" flex>
+  <ng-include src="'app/desktop/desktop.html'" layout="column" flex></ng-include>
 </div>
 <ng-include src="'app/taskbar/taskbar.html'"></ng-include>
 
-<script src="app/moment.js"></script>
 <!-- bower:js -->
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/angular-animate/angular-animate.js"></script>
@@ -34,17 +33,14 @@
 <!-- endbower -->
 <script src="app/app.js"></script>
 <!-- injector:js -->
-<script src="app/moment.js"></script>
-<script src="app/common/defaults.js"></script>
-<script src="app/dips/dips.controller.js"></script>
+<script src="app/common/settings.service.js"></script>
+<script src="app/desktop/desktop.controller.js"></script>
 <script src="app/taskbar/taskbar.controller.js"></script>
 <script src="app/common/services/grid.service.js"></script>
-<script src="app/common/services/nachosApi.service.js"></script>
-<script src="app/common/services/nativeApi.service.js"></script>
-<script src="app/common/services/screens.service.js"></script>
 <script src="app/common/services/windows.service.js"></script>
 <script src="app/common/services/workspaces.service.js"></script>
-<script src="app/dips/add-dip/add-dip.controller.js"></script>
+<script src="app/desktop/add-dip/add-dip.controller.js"></script>
+<script src="app/desktop/add-workspace/add-workspace.controller.js"></script>
 <!-- endinjector -->
 </body>
 </html>

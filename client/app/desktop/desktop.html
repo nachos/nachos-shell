@@ -1,0 +1,32 @@
+<div ng-controller="Desktop" layout="column" flex>
+  <div gridster="grid.settings" flex>
+    <div ng-repeat="dip in dips" gridster-item="dip" class="md-whiteframe-z1" >
+      <div layout="row" layout-align="end" class="foreground" ng-show="grid.editMode" ng-class="{ enabled: grid.editMode }">
+        <!--<i class="mdi mdi-delete" ng-click="deleteDip(dip)"></i>-->
+      </div>
+      <iframe-wrapper src="dip.path" content="dip.content" class="dip"></iframe-wrapper>
+    </div>
+  </div>
+  <div layout="row" layout-align="end" layout-padding>
+    <md-fab-speed-dial ng-show="grid.editMode" md-direction="up" class="md-scale md-fab-bottom-right">
+      <md-fab-trigger>
+        <md-button ng-show="grid.editMode" class="md-fab md-mini md-primary add-dip"
+                   ng-click="addDip($event)" aria-label="add-dip">
+          <i class="mdi mdi-plus"></i>
+          <md-tooltip md-direction="left">
+            <span>Add Dip</span>
+          </md-tooltip>
+        </md-button>
+      </md-fab-trigger>
+      <md-fab-actions>
+        <md-button aria-label="add-workspace" class="md-fab md-primary md-hue-2 md-mini"
+                   ng-click="addWorkspace($event)">
+          <i class="mdi mdi-arrange-bring-forward"></i>
+          <md-tooltip md-direction="left">
+            <span>New Workspace</span>
+          </md-tooltip>
+        </md-button>
+      </md-fab-actions>
+    </md-fab-speed-dial>
+  </div>
+</div>

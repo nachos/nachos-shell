@@ -1,24 +1,31 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('TaskbarController', function($scope, $timeout, grid, nativeApi, workspaces, windows, nachosApi){
+  .controller('TaskbarController', function ($scope, $interval, grid, workspaces, windows) {
     var _ = require('lodash');
+    var nativeApi = require('native-api');
+    var nachosApi = require('nachos-api');
+
     $scope.date = Date.now();
+    $interval(function () {
+      $scope.date = Date.now();
+    }, 1000);
+
     $scope.grid = grid;
 
-    var tick = function() {
-      $scope.date = Date.now(); // get the current time
-      $timeout(tick, 1000); // reset the timer
-    };
-
-    // Start the timer
-    $timeout(tick, 1000);
-
-    $scope.windows = _.groupBy(windows.windows, function (window) {
+    $scope.windows = _.groupBy(windows.getAll(), function (window) {
       return window.process.name;
     });
 
-    workspaces.getWorkspacesMeta(function(err, workspaces){
+    workspaces.registerChanges(function (err, workspaces) {
+      if (err) {
+        return console.log(err);
+      }
+
+      $scope.workspaces = workspaces;
+    });
+
+    workspaces.getWorkspacesMeta(function (err, workspaces) {
       $scope.workspaces = workspaces;
       $scope.$apply();
     });
@@ -28,7 +35,7 @@ angular.module('shellApp')
     });
 
     $scope.getNumberOfWindowsClass = function (window) {
-      if(window.length > 9){
+      if (window.length > 9) {
         return 'mdi-numeric-9-plus-box-multiple-outline';
       }
       else if (window.length === 1) {
@@ -39,11 +46,11 @@ angular.module('shellApp')
       }
     };
 
-	$scope.changeWorkspace = function(id){
-    workspaces.changeWorkspace(id);
-  };
+    $scope.changeWorkspace = function (id) {
+      workspaces.changeWorkspace(id);
+    };
 
-	$scope.windowClick = function (window) {
+    $scope.windowClick = function (window) {
       if (window.length === 1) {
         var win = window[0];
         if (nativeApi.window.isForeground(win.handle)) {

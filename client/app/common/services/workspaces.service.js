@@ -1,56 +1,68 @@
 'use strict';
 
 angular.module('shellApp')
-  .service('workspaces', function($log, $rootScope, nachosApi, DEFAULT_CONFIG) {
+  .service('workspaces', function ($log, $rootScope, settings) {
     var self = this;
     var _ = require('lodash');
     var async = require('async');
     var path = require('path');
     var uuid = require('node-uuid');
     var Packages = require('nachos-packages');
-    var activeWorkspace;
-
     var packages = new Packages();
 
-    var defaultconfig = DEFAULT_CONFIG;
-    defaultconfig.workspaces[0].id = uuid.v4();
+    var activeWorkspace;
 
-    var shellSettings = nachosApi.settings('shell', {
-      globalDefaults: defaultconfig
-    });
-
-    var dipToWidget = function(dip, dipSettings){
-      dip.id = dipSettings.id;
-      dip.name = dipSettings.name;
-      dip.path = path.resolve(dip.path, dip.config.main);
-      dip.sizeX = dipSettings.layout.width;
-      dip.sizeY = dipSettings.layout.height;
-      dip.row = dipSettings.layout.y;
-      dip.col = dipSettings.layout.x;
-
-      return dip;
-    };
-
-    var widgetToDip = function(widget, dip){
-      if(!dip){
-        dip = {
-          id: widget.id,
-          path: widget.path,
-          name: widget.name,
-          layout: {}
+    function setDefaultWorkspace() {
+      settings.get(function (err, config) {
+        if (err) {
+          callback(err);
+          return $log.log(err);
         }
-      }
 
-      dip.layout.width = widget.sizeX;
-      dip.layout.height = widget.sizeY;
-      dip.layout.y = widget.row;
-      dip.layout.x = widget.col;
+        if (_.isEmpty(config.workspaces)) {
+          self.createWorkspace('home');
+        }
+      });
 
-      return dip;
+    }
+
+    var getGridItem = function (dipConfig, dipLayout) {
+      return {
+        id: dipLayout.id,
+        name: dipConfig.config.name,
+        path: path.resolve(dipConfig.path, dipConfig.config.main),
+        sizeX: dipLayout.layout.width,
+        sizeY: dipLayout.layout.height,
+        row: dipLayout.layout.y,
+        col: dipLayout.layout.x
+      };
     };
 
-    var updateWorkspace = function (workspace, updateAll) {
-      activeWorkspace = workspace;
+    var createLayoutFromItem = function (gridItem) {
+      return {
+        id: gridItem.id,
+        path: gridItem.path,
+        name: gridItem.name,
+        layout: {
+          width: gridItem.sizeX,
+          height: gridItem.sizeY,
+          y: gridItem.row,
+          x: gridItem.col
+        }
+      };
+    };
+
+    var updateLayoutFromItem = function (gridItem, dipLayout) {
+      dipLayout.layout = {
+        width: gridItem.sizeX,
+        height: gridItem.sizeY,
+        y: gridItem.row,
+        x: gridItem.col
+      };
+    };
+
+    var updateWorkspace = function (id, workspace, updateAll) {
+      activeWorkspace = {id: id, workspace: workspace};
       $rootScope.$emit('refreshWorkspace');
 
       if (updateAll) {
@@ -59,36 +71,32 @@ angular.module('shellApp')
     };
 
     var getActiveWorkspace = function (callback) {
-      self.getWorkspaces(function (err, workspaces) {
+      settings.get(function (err, config) {
         if (err) {
           callback(err);
           return $log.log(err);
         }
 
-        shellSettings.get(function (err, config) {
-          if (err) {
-            callback(err);
-            return $log.log(err);
-          }
-
-          var active = workspaces[0];
-
-          return callback(null, active);
-        });
+        var last = config.lastWorkspace || Object.keys(config.workspaces)[0];
+        if (!last) {
+          return setDefaultWorkspace();
+        }
+        var active = config.workspaces[last];
+        return callback(null, {id: last, workspace: active});
       });
     };
 
-    var workspaceToDips = function (workspace, callback) {
-      async.map(workspace.dips, function (dipSettings, callback) {
-        packages.getDip(dipSettings.name, function (err, dip) {
+    var getWorkspaceDips = function (workspace, callback) {
+      async.map(workspace.dips, function (dipLayout, callback) {
+        packages.getDip(dipLayout.name, function (err, dipConfig) {
           if (err) {
             callback(null, null);
-            return $log.log('error loading dip %s - %s', dipSettings.name, err);
+            return $log.log('error loading dip %s - %s', dipLayout.name, err);
           }
 
-          dipToWidget(dip, dipSettings);
+          var gridItem = getGridItem(dipConfig, dipLayout);
 
-          callback(null, dip);
+          callback(null, gridItem);
         });
       }, function (err, dips) {
         var filtered = _.filter(dips, function (dip) {
@@ -99,63 +107,53 @@ angular.module('shellApp')
       });
     };
 
-    this.addNewWidget = function(widget){
+    this.addNewDip = function (dip) {
       // Find a better way to assign dip ids
-      self.saveWidgetLayout(widget);
+      self.saveDipLayout(dip);
     };
 
-    this.saveWidgetLayout = function(widget) {
-      shellSettings.get(function (err, config) {
+    this.saveDipLayout = function (gridItem) {
+      settings.get(function (err, config) {
         if (err) {
           return $log.log(err);
         }
 
-        var workspace = _.findWhere(config.workspaces, {id: activeWorkspace.id});
-        var dip = _.findWhere(workspace.dips, { id: widget.id});
-        if(!dip) {
-          dip = widgetToDip(widget, dip);
-          workspace.dips.push(dip);
+        var dipLayout = _.findWhere(activeWorkspace.workspace.dips, {id: gridItem.id});
+
+        if (!dipLayout) {
+          dipLayout = createLayoutFromItem(gridItem);
+          activeWorkspace.workspace.dips.push(dipLayout);
         } else {
-          widgetToDip(widget, dip);
+          updateLayoutFromItem(gridItem, dipLayout);
         }
 
-        shellSettings.save(config, function(err){
-          if(err) {
+        config.workspaces[activeWorkspace.id] = activeWorkspace.workspace;
+        settings.save(config, function (err) {
+          if (err) {
             $log.log(err);
           }
         });
       });
     };
 
-    this.getWorkspaces = function(callback){
-      shellSettings.get(function (err, config) {
-        if (err) {
-          callback(err);
-          return $log.log(err);
-        }
-
-        callback(null, config.workspaces);
-      });
-    };
-
     this.getWorkspacesMeta = function (callback) {
-      self.getWorkspaces(function (err, workspaces) {
+      settings.get(function (err, config) {
         if (err) {
           callback(err);
           return $log.log(err);
         }
 
-        var meta = _.map(workspaces, function (workspace) {
-          return { id: workspace.id, name: workspace.name }
+        var meta = _.mapValues(config.workspaces, function (workspace) {
+          return workspace.name;
         });
 
         callback(null, meta);
       });
     };
 
-    this.getWidgets = function(callback) {
+    this.getDips = function (callback) {
       if (activeWorkspace) {
-        workspaceToDips(activeWorkspace, callback);
+        getWorkspaceDips(activeWorkspace.workspace, callback);
       } else {
         getActiveWorkspace(function (err, workspace) {
           if (err) {
@@ -164,19 +162,59 @@ angular.module('shellApp')
           }
 
           activeWorkspace = workspace;
-          workspaceToDips(activeWorkspace, callback);
+          getWorkspaceDips(activeWorkspace.workspace, callback);
         });
       }
     };
 
-    this.changeWorkspace = function(id) {
-      self.getWorkspaces(function(err, workspaces) {
-        var workspace = _.findWhere(workspaces, { 'id': id });
-        if(!workspace) {
+    this.changeWorkspace = function (id) {
+      settings.get(function (err, config) {
+        if (err) {
+          return console.log(err);
+        }
+
+        var workspace = config.workspaces[id];
+        if (!workspace) {
           $log.error('No such workspace ' + id);
-        } else if(activeWorkspace != id) {
-          updateWorkspace(workspace, true);
+        }
+        else if (activeWorkspace.id != id) {
+          config.lastWorkspace = id;
+          settings.save(config, function (err) {
+            if (err) {
+              return console.log(err);
+            }
+
+            updateWorkspace(id, workspace, true);
+          });
         }
       });
+    };
+
+    this.createWorkspace = function (name) {
+      var structure = {
+        workspaces: {}
+      };
+
+      var id = uuid.v4();
+      var workspace = {
+        name: name,
+        dips: []
+      };
+      structure.workspaces[id] = workspace;
+
+
+      settings.set(structure, function (err) {
+        if (err) {
+          console.log(err);
+        }
+
+        updateWorkspace(id, workspace);
+
+        self.getWorkspacesMeta(self.nofifyChanges);
+      })
+    };
+
+    this.registerChanges = function (cb) {
+      self.nofifyChanges = cb;
     }
-});
+  });

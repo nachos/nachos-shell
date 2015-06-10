@@ -1,52 +1,58 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('DipsController', function ($scope, $mdDialog, $rootScope, grid, workspaces) {
-    var path = require('path');
+  .controller('Desktop', function ($scope, $mdDialog, $rootScope, grid, workspaces, $timeout) {
     var _ = require('lodash');
-
-    $scope.dips = [];
 
     $scope.grid = grid;
 
-    $scope.addWidget = function (ev) {
+    $scope.addDip = function (ev) {
       $mdDialog.show({
-        controller: 'AddDipController',
-        templateUrl: 'app/dips/add-dip/add-dip.html',
+        controller: 'AddDip',
+        templateUrl: 'app/desktop/add-dip/add-dip.html',
         targetEvent: ev
       })
-        .then(function (widget) {
-          widget.content = getIframeContent(widget);
-          $scope.widgets.push(widget);
-          workspaces.addNewWidget(widget);
+        .then(function (dip) {
+          dip.content = getIframeContent(dip);
+          $scope.dips.push(dip);
+          workspaces.addNewDip(dip);
+        });
+    };
+
+    $scope.addWorkspace = function (ev) {
+      $mdDialog.show({
+        controller: 'AddWorkspace',
+        templateUrl: 'app/desktop/add-workspace/add-workspace.html',
+        targetEvent: ev
+      })
+        .then(function(name) {
+          workspaces.createWorkspace(name);
         });
     };
 
     $rootScope.$on('refreshWorkspace', function () {
-      renderWidgets();
+      renderDips();
     });
 
-    $scope.openWidgetSettings = function (widget) {
-      // Open this particular dip in the nachos-settings
-    };
-
-    function renderWidgets() {
-      workspaces.getWidgets(function (err, widgets) {
-        _.forEach(widgets, function (widget) {
-          widget.content = getIframeContent(widget);
+    function renderDips() {
+      workspaces.getDips(function (err, dips) {
+        _.forEach(dips, function (dip) {
+          dip.content = getIframeContent(dip);
         });
 
-        $scope.widgets = widgets;
-        $scope.$apply();
+        $timeout(function (){
+          $scope.dips = dips;
+          console.log(dips);
+        });
       });
     }
 
-    function getIframeContent(widget) {
+    function getIframeContent(dip) {
       var nachosApi = require('nachos-api');
 
       var api = {
         global: function (globalDefaults) {
-          var settings = nachosApi.settings(widget.name, {
+          var settings = nachosApi.settings(dip.name, {
             globalDefaults: globalDefaults
           });
 
@@ -63,7 +69,7 @@ angular.module('shellApp')
           };
         },
         instance: function (instanceDefaults) {
-          var instance = nachosApi.settings(widget.name).instance(widget.id, {
+          var instance = nachosApi.settings(dip.name).instance(dip.id, {
             instanceDefaults: instanceDefaults
           });
 
@@ -85,10 +91,10 @@ angular.module('shellApp')
       api.fs = nachosApi.fs;
 
       return {
-        require: require('relative-require')(widget.path),
+        require: require('relative-require')(dip.path),
         dipApi: api
       };
     }
 
-    renderWidgets();
+    renderDips();
   });

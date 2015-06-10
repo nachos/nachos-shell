@@ -150,8 +150,7 @@ gulp.task('build', function (cb) {
 gulp.task('wiredep', function () {
   gulp.src('client/index.html')
     .pipe(wiredep({
-      ignorePath: 'client/',
-      exclude: [/font-awesome.css/]
+      ignorePath: 'client/'
     }))
     .pipe(gulp.dest('client'));
 });
@@ -168,7 +167,7 @@ gulp.task('less', ['inject:less'], function () {
         'client/components'
       ]
     }))
-    .pipe(gulp.dest('client/.tmp/app'));
+    .pipe(gulp.dest('.tmp/app'));
 });
 
 gulp.task('inject:less', function () {

@@ -1,11 +1,10 @@
 'use strict';
 
 angular.module('shellApp', ['ngMaterial', 'gridster', 'angularMoment', 'iframeWrapper'])
-  .config(function(){
-
-  })
-  .run(function(nativeApi){
+  .run(function(){
+    var nativeApi = require('native-api');
     var _ = require('lodash');
+
     var windows = nativeApi.window.getAllWindows();
     //console.log(windows);
 

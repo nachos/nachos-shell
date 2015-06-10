@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('AddDipController', function($scope, $mdDialog) {
+  .controller('AddDip', function($scope, $mdDialog) {
     var Packages = require('nachos-packages');
     var path = require('path');
     var uuid = require('node-uuid');

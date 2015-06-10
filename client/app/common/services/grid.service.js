@@ -3,10 +3,9 @@
 angular.module('shellApp')
   .service('grid', function(workspaces) {
     var self = this;
-    var _ = require('lodash');
 
-    var itemDragged = function (event, $element, widget) {
-      workspaces.saveWidgetLayout(widget);
+    var itemChanged = function (event, $element, dip) {
+      workspaces.saveDipLayout(dip);
     };
 
     self.settings = {
@@ -19,14 +18,12 @@ angular.module('shellApp')
       minSizeY: 5,
       draggable: {
         enabled: false,
-        //start: itemDragged,
-        stop: itemDragged
+        stop: itemChanged
       },
       resizable: {
         enabled: false,
         handles: ['n', 'e', 's', 'w', 'se', 'sw'],
-        //start: itemDragged,
-        stop: itemDragged
+        stop: itemChanged
       }
     };
 

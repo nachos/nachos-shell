@@ -7,7 +7,7 @@
     </md-button>
   </div>
   <div class="workspaces" layout="row">
-    <md-button ng-repeat="workspace in workspaces" ng-click="changeWorkspace(workspace.id)"> {{ workspace.name }} </md-button>
+    <md-button ng-repeat="(id, workspace) in workspaces" ng-click="changeWorkspace(id)"> {{ workspace }} </md-button>
   </div>
   <div class="toolbar" layout="row">
     <md-button ng-click="grid.toggleEditMode()">
