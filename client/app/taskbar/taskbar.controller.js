@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('TaskbarController', function ($scope, $interval, grid, workspaces, windows) {
+  .controller('TaskbarController', function ($scope, $interval, grid, workspaces, windows, $timeout) {
     var _ = require('lodash');
     var nativeApi = require('native-api');
     var nachosApi = require('nachos-api');
@@ -17,18 +17,19 @@ angular.module('shellApp')
       return window.process.name;
     });
 
-    workspaces.registerChanges(function (err, workspaces) {
-      if (err) {
-        return console.log(err);
-      }
-
-      $scope.workspaces = workspaces;
+    workspaces.onWorkspacesChanged(function () {
+      updateWorkspaceMeta();
     });
 
-    workspaces.getWorkspacesMeta(function (err, workspaces) {
-      $scope.workspaces = workspaces;
-      $scope.$apply();
-    });
+    function updateWorkspaceMeta () {
+      workspaces.getWorkspacesMeta(function (err, workspaces) {
+        $timeout(function () {
+          $scope.workspaces = workspaces;
+        });
+      });
+    }
+
+    updateWorkspaceMeta();
 
     nachosApi.user.me(function (err, user) {
       $scope.user = user;

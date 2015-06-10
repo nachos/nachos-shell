@@ -8,7 +8,7 @@ angular.module('shellApp')
       workspaces.saveDipLayout(dip);
     };
 
-    self.settings = {
+    this.settings = {
       columns: 50,
       pushing: false,
       swapping: true,
@@ -27,9 +27,9 @@ angular.module('shellApp')
       }
     };
 
-    self.editMode = false;
+    this.editMode = false;
 
-    self.toggleEditMode = function(){
+    this.toggleEditMode = function(){
       self.editMode = !self.editMode;
       self.settings.resizable.enabled = self.settings.draggable.enabled = self.editMode;
     };

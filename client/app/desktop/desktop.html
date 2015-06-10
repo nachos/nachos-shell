@@ -18,7 +18,7 @@
           </md-tooltip>
         </md-button>
       </md-fab-trigger>
-      <md-fab-actions>
+      <md-fab-actions  ng-show="grid.editMode">
         <md-button aria-label="add-workspace" class="md-fab md-primary md-hue-2 md-mini"
                    ng-click="addWorkspace($event)">
           <i class="mdi mdi-arrange-bring-forward"></i>

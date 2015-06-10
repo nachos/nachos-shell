@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('Desktop', function ($scope, $mdDialog, $rootScope, grid, workspaces, $timeout) {
+  .controller('Desktop', function ($scope, $mdDialog, grid, workspaces, $timeout) {
     var _ = require('lodash');
 
     $scope.grid = grid;
@@ -15,7 +15,7 @@ angular.module('shellApp')
         .then(function (dip) {
           dip.content = getIframeContent(dip);
           $scope.dips.push(dip);
-          workspaces.addNewDip(dip);
+          workspaces.saveDipLayout(dip);
         });
     };
 
@@ -30,7 +30,7 @@ angular.module('shellApp')
         });
     };
 
-    $rootScope.$on('refreshWorkspace', function () {
+    workspaces.onActiveChanged(function () {
       renderDips();
     });
 
@@ -42,7 +42,6 @@ angular.module('shellApp')
 
         $timeout(function (){
           $scope.dips = dips;
-          console.log(dips);
         });
       });
     }
