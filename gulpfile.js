@@ -157,8 +157,7 @@ gulp.task('wiredep', function () {
 
 gulp.task('less', ['inject:less'], function () {
   return gulp.src([
-      'client/app/app.less',
-      'client/app/**/*.less'
+      'client/app/app.less'
     ])
     .pipe(less({
       paths: [
