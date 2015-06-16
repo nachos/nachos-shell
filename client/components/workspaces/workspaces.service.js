@@ -24,14 +24,12 @@ angular.module('shellApp')
               return callback(err);
             }
 
-            callback(null, activeWorkspace);
+            setActiveWorkspace(activeWorkspace.id, callback);
           });
         }
 
-        var last = config.lastWorkspace || Object.keys(config.workspaces)[0];
-
-        var active = config.workspaces[last];
-        callback(null, { id: last, workspace: active });
+        var id = config.workspaces[config.lastWorkspace] ? config.lastWorkspace : Object.keys(config.workspaces)[0];
+        callback(null, { id: id, workspace: config.workspaces[id] });
       });
     }
 
@@ -153,11 +151,12 @@ angular.module('shellApp')
     this.createWorkspace = function (name, cb) {
       cb = cb || _.noop;
 
+      var id = uuid.v4();
+
       var newSettings = {
         workspaces: {}
       };
 
-      var id = uuid.v4();
       newSettings.workspaces[id] = {
         name: name,
         dips: []
