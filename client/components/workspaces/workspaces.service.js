@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('shellApp')
-  .service('workspaces', function ($log, settings, gridItem) {
+  .service('workspaces', function ($log, settings, gridItem, $rootScope) {
     var self = this;
     var _ = require('lodash');
     var async = require('async');
@@ -10,6 +10,30 @@ angular.module('shellApp')
     var nachosApi = require('nachos-api');
     var Packages = require('nachos-packages');
     var packages = new Packages();
+
+    function wrap(cb) {
+      return function (event, args) {
+        cb(args);
+      }
+    }
+
+    function on(name, cb) {
+      nachosApi.on(name, cb);
+      var destroyScope = $rootScope.$on(name, wrap(cb));
+
+      return function () {
+        nachosApi.removeListener(name, cb);
+        destroyScope();
+      }
+    }
+
+    function emit(name, data, remoteOnly) {
+      nachosApi.emit(name, data);
+
+      if (!remoteOnly) {
+        $rootScope.$broadcast(name, data);
+      }
+    }
 
     function getActiveWorkspace(callback) {
       settings.get(function (err, config) {
@@ -41,7 +65,7 @@ angular.module('shellApp')
           return console.log(err);
         }
 
-        nachosApi.emit('shell.workspaces.active-changed', id);
+        emit('shell.workspaces.active-changed', id);
         cb();
       });
     }
@@ -93,7 +117,7 @@ angular.module('shellApp')
               $log.log(err);
             }
 
-            nachosApi.emit('shell.workspaces.updated:' + activeWorkspace.id);
+            emit('shell.workspaces.updated:' + activeWorkspace.id, null, true);
           });
         });
       });
@@ -167,7 +191,7 @@ angular.module('shellApp')
           return cb(err);
         }
 
-        nachosApi.emit('shell.workspaces.created', id);
+        emit('shell.workspaces.created', id);
         setActiveWorkspace(id, function (err) {
           if (err) {
             return cb(err);
@@ -179,9 +203,8 @@ angular.module('shellApp')
     };
 
     this.onWorkspacesChanged = function (cb) {
-      nachosApi.on('shell.workspaces.created', cb);
-      nachosApi.on('shell.workspaces.deleted', cb);
-      nachosApi.on('shell.workspaces.updated', cb);
+      on('shell.workspaces.created', cb);
+      on('shell.workspaces.updated', cb);
     };
 
     this.onActiveChanged = function (cb) {
@@ -190,15 +213,18 @@ angular.module('shellApp')
           return console.log(err);
         }
 
+        var removeListener;
         var last = activeWorkspace.id;
 
-        nachosApi.on('shell.workspaces.updated:' + activeWorkspace.id, cb);
-        nachosApi.on('shell.workspaces.active-changed', function (id) {
-          nachosApi.removeListener('shell.workspaces.updated:' + last, cb);
+        var activeChanged = function (id) {
+          removeListener();
           last = id;
-          nachosApi.on('shell.workspaces.updated:' + id, cb);
+          removeListener = on('shell.workspaces.updated:' + id, cb);
           cb();
-        });
+        };
+
+        removeListener = on('shell.workspaces.updated:' + activeWorkspace.id, cb);
+        on('shell.workspaces.active-changed', activeChanged);
       });
     }
   });
