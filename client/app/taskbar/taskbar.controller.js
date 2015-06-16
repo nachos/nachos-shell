@@ -4,7 +4,7 @@ angular.module('shellApp')
   .controller('TaskbarController', function ($scope, $interval, grid, workspaces, windows, $timeout) {
     var _ = require('lodash');
     var nativeApi = require('native-api');
-    var nachosApi = require('nachos-api');
+    var client = require('nachos-server-api')();
 
     $scope.date = Date.now();
     $interval(function () {
@@ -31,7 +31,7 @@ angular.module('shellApp')
 
     updateWorkspaceMeta();
 
-    nachosApi.user.me(function (err, user) {
+    client.users.me(function (err, user) {
       $scope.user = user;
     });
 

@@ -87,7 +87,7 @@ angular.module('shellApp')
       };
 
       // TODO: Remove later after nachos-api is published
-      api.fs = nachosApi.fs;
+      api.system = nachosApi.system;
 
       return {
         require: require('relative-require')(dip.path),
