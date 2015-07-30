@@ -1,18 +1,18 @@
 'use strict';
 
 angular.module('shellApp')
-  .service('windows', function ($interval) {
-    var nativeApi = require('native-api');
+  .service('windows', function () {
+    var windowsManager = require('windows-manager');
     var _ = require('lodash');
 
     var get = function() {
-      var windows = nativeApi.window.getAllWindows();
+      var windows = windowsManager.getAll();
 
-      var processes = nativeApi.process.getAllProcesses().processes;
-      _.forEach(windows, function (window) {
-        window.process = _.findWhere(processes, {processID: window.processID});
-
-      });
+      //var processes = nativeApi.process.getAllProcesses().processes;
+      //_.forEach(windows, function (window) {
+      //  window.process = _.findWhere(processes, {processID: window.processID});
+      //
+      //});
 
       return windows;
     };

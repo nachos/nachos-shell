@@ -2,6 +2,7 @@
   "name": "shell-taco",
   "version": "0.0.0",
   "description": "The main nachos shell taco",
+  "main": "lib/index.js",
   "scripts": {
     "test": "gulp test"
   },
@@ -21,29 +22,31 @@
   },
   "homepage": "https://github.com/nachos/shell-taco",
   "devDependencies": {
-    "del": "^1.1.1",
-    "gulp": "^3.8.11",
-    "gulp-inject": "^1.2.0",
-    "gulp-jshint": "^1.9.4",
-    "gulp-less": "^3.0.2",
-    "gulp-util": "^3.0.4",
-    "jshint-stylish": "^1.0.1",
-    "lazypipe": "^0.2.2",
-    "mkdirp": "^0.5.0",
+    "del": "^1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-inject": "^1.5.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-less": "^3.0.3",
+    "gulp-util": "^3.0.6",
+    "jshint-stylish": "^2.0.1",
+    "lazypipe": "^1.0.1",
+    "mkdirp": "^0.5.1",
     "ncp": "^2.0.0",
-    "node-webkit-builder": "^1.0.11",
-    "rimraf": "^2.3.2",
-    "run-sequence": "^1.0.2",
-    "wiredep": "^2.2.2"
+    "rimraf": "^2.4.2",
+    "run-sequence": "^1.1.2",
+    "wiredep": "^3.0.0-beta"
   },
   "dependencies": {
-    "async": "^0.9.0",
+    "async": "^1.4.0",
     "gulp-exec": "^2.1.1",
-    "lodash": "^3.9.3",
-    "moment": "^2.9.0",
+    "lodash": "^3.10.0",
+    "moment": "^2.10.6",
+    "nachos-packages": "^1.0.1",
     "node-uuid": "^1.4.3",
-    "nw": "^0.12.0-1",
     "relative-require": "git://github.com/nachos/relative-require"
+  },
+  "engines": {
+    "atom-shell": "0.30.1"
   },
   "private": true
 }

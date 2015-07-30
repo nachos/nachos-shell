@@ -3,8 +3,11 @@
 angular.module('shellApp')
   .controller('TaskbarController', function ($scope, $interval, grid, workspaces, windows, $timeout) {
     var _ = require('lodash');
-    var nativeApi = require('native-api');
-    var client = require('nachos-server-api')();
+    var nachosApi = require('nachos-api');
+    var client = nachosApi.server;
+
+    var remote = require('remote');
+    var windowsManager = remote.require('windows-manager');
 
     $scope.date = Date.now();
     $interval(function () {
@@ -13,27 +16,29 @@ angular.module('shellApp')
 
     $scope.grid = grid;
 
-    $scope.windows = _.groupBy(windows.getAll(), function (window) {
-      return window.process.name;
-    });
+    //$scope.windows = _.groupBy(windows.getAll(), function (window) {
+    //  //return window.process.name;
+    //});
+
+    $scope.windows = windows.getAll();
 
     workspaces.onWorkspacesChanged(function () {
-      updateWorkspaceMeta();
+      return updateWorkspaceMeta();
     });
 
-    function updateWorkspaceMeta () {
-      workspaces.getWorkspacesMeta(function (err, workspaces) {
-        $timeout(function () {
+    function updateWorkspaceMeta() {
+      return workspaces.getWorkspacesMeta()
+        .then(function (workspaces) {
           $scope.workspaces = workspaces;
         });
-      });
     }
 
     updateWorkspaceMeta();
 
-    client.users.me(function (err, user) {
-      $scope.user = user;
-    });
+    client.users.me()
+      .then(function (user) {
+        $scope.user = user;
+      });
 
     $scope.getNumberOfWindowsClass = function (window) {
       if (window.length > 9) {
@@ -52,15 +57,6 @@ angular.module('shellApp')
     };
 
     $scope.windowClick = function (window) {
-      if (window.length === 1) {
-        var win = window[0];
-        if (nativeApi.window.isForeground(win.handle)) {
-          nativeApi.window.minimize(win.handle);
-        } else {// if (nativeApi.window.isMinimized(win.handle)) {
-          nativeApi.window.setToForeground(win.handle);
-        }
-      } else {
-        alert('Can\'t click, multiple processes');
-      }
+      windowsManager.activate(window.handle);
     };
   });

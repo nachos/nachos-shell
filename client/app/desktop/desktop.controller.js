@@ -2,8 +2,6 @@
 
 angular.module('shellApp')
   .controller('Desktop', function ($scope, $mdDialog, grid, workspaces, $timeout) {
-    var _ = require('lodash');
-
     $scope.grid = grid;
 
     $scope.addDip = function (ev) {
@@ -25,7 +23,7 @@ angular.module('shellApp')
         templateUrl: 'app/desktop/add-workspace/add-workspace.html',
         targetEvent: ev
       })
-        .then(function(name) {
+        .then(function (name) {
           workspaces.createWorkspace(name);
         });
     };
@@ -35,15 +33,19 @@ angular.module('shellApp')
     });
 
     function renderDips() {
-      workspaces.getDips(function (err, dips) {
-        _.forEach(dips, function (dip) {
-          dip.content = getIframeContent(dip);
-        });
+      return workspaces.getDips()
+        .then(function (dips) {
+          dips.forEach(function (dip) {
+            dip.content = getIframeContent(dip);
+          });
 
-        $timeout(function (){
-          $scope.dips = dips;
+          $timeout(function () {
+            $scope.dips = dips;
+          });
+        })
+        .catch(function (err) {
+          console.log(err);
         });
-      });
     }
 
     function getIframeContent(dip) {
@@ -56,11 +58,11 @@ angular.module('shellApp')
           });
 
           return {
-            get: function (callback) {
-              settings.get(callback);
+            get: function () {
+              return settings.get();
             },
-            save: function (config, callback) {
-              settings.save(config, callback);
+            save: function (config) {
+              return settings.save(config);
             },
             onChange: function (callback) {
               settings.onChange(callback);
@@ -68,16 +70,15 @@ angular.module('shellApp')
           };
         },
         instance: function (instanceDefaults) {
-          var instance = nachosApi.settings(dip.name).instance(dip.id, {
-            instanceDefaults: instanceDefaults
-          });
+          var instance = nachosApi.settings(dip.name)
+            .instance(dip.id, { instanceDefaults: instanceDefaults });
 
           return {
-            get: function (callback) {
-              instance.get(callback);
+            get: function () {
+              return instance.get();
             },
-            save: function (config, callback) {
-              instance.save(config, callback);
+            save: function (config) {
+              return instance.save(config);
             },
             onChange: function (callback) {
               instance.onChange(callback);
@@ -85,9 +86,6 @@ angular.module('shellApp')
           };
         }
       };
-
-      // TODO: Remove later after nachos-api is published
-      api.system = nachosApi.system;
 
       return {
         require: require('relative-require')(dip.path),

@@ -1,16 +1,15 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('AddDip', function($scope, $mdDialog) {
-    var Packages = require('nachos-packages');
+  .controller('AddDip', function ($scope, $mdDialog) {
+    var packages = require('nachos-packages');
     var path = require('path');
     var uuid = require('node-uuid');
 
-    var packages = new Packages();
-
-    packages.getByType('dip', true, function (err, dips) {
-      $scope.widgets = dips;
-    });
+    packages.getByType('dip', true)
+      .then(function (dips) {
+        $scope.widgets = dips;
+      });
 
     $scope.add = function (widget) {
       widget.id = uuid.v4();

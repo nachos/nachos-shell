@@ -1,15 +1,13 @@
 'use strict';
 
 angular.module('shellApp')
-  .service('workspaces', function ($log, settings, gridItem, $rootScope) {
+  .service('workspaces', function ($log, settings, gridItem, $rootScope, $q) {
     var self = this;
     var _ = require('lodash');
-    var async = require('async');
     var path = require('path');
     var uuid = require('node-uuid');
     var nachosApi = require('nachos-api');
-    var Packages = require('nachos-packages');
-    var packages = new Packages();
+    var packages = require('nachos-packages');
 
     function wrap(cb) {
       return function (event, args) {
@@ -35,146 +33,150 @@ angular.module('shellApp')
       }
     }
 
-    function getActiveWorkspace(callback) {
-      settings.get(function (err, config) {
-        if (err) {
-          callback(err);
-          return $log.log(err);
-        }
+    /**
+     *
+     * @returns {$q.promise}
+     */
+    function getActiveWorkspace() {
+      return settings.get()
+        .then(function (config) {
+          if (_.isEmpty(config.workspaces)) {
+            return self.createWorkspace('home')
+              .then(function (activeWorkspace) {
 
-        if (_.isEmpty(config.workspaces)) {
-          return self.createWorkspace('home', function (err, activeWorkspace) {
-            if (err) {
-              return callback(err);
-            }
-
-            setActiveWorkspace(activeWorkspace.id, callback);
-          });
-        }
-
-        var id = config.workspaces[config.lastWorkspace] ? config.lastWorkspace : Object.keys(config.workspaces)[0];
-        callback(null, { id: id, workspace: config.workspaces[id] });
-      });
-    }
-
-    function setActiveWorkspace(id, cb) {
-      cb = cb || _.noop;
-
-      settings.set({ lastWorkspace: id }, function (err) {
-        if (err) {
-          return console.log(err);
-        }
-
-        emit('shell.workspaces.active-changed', id);
-        cb();
-      });
-    }
-
-    function getWorkspaceDips(workspace, callback) {
-      async.map(workspace.dips, function (dipLayout, callback) {
-        packages.getDip(dipLayout.name, function (err, dipConfig) {
-          if (err) {
-            callback();
-            return $log.log('error loading dip %s - %s', dipLayout.name, err);
+                return setActiveWorkspace(activeWorkspace.id);
+              });
           }
 
-          var item = gridItem.createItem(dipConfig, dipLayout);
+          var id = config.workspaces[config.lastWorkspace] ? config.lastWorkspace : Object.keys(config.workspaces)[0];
 
-          callback(null, item);
+          return {id: id, workspace: config.workspaces[id]};
         });
-      }, function (err, dips) {
-        var filtered = _.filter(dips, function (dip) {
-          return !!dip;
-        });
-
-        callback(null, filtered);
-      });
     }
 
+    /**
+     *
+     * @param id
+     */
+    function setActiveWorkspace(id) {
+      return settings.set({lastWorkspace: id})
+        .then(function () {
+          emit('shell.workspaces.active-changed', id);
+
+          return $q.resolve();
+        });
+    }
+
+    /**
+     *
+     * @param workspace
+     * @returns {*}
+     */
+    function getWorkspaceDips(workspace) {
+      var workspaceDipsPromises = _.map(workspace.dips, function (dipLayout) {
+        return packages.getDip(dipLayout.name)
+          .then(function (dipConfig) {
+            var item = gridItem.createItem(dipConfig, dipLayout);
+
+            return item;
+          });
+      });
+
+      return $q.all(workspaceDipsPromises)
+        .then(function (dips) {
+          var filtered = _.filter(dips, function (dip) {
+            return !!dip;
+          });
+
+          return filtered;
+        });
+    }
+
+    /**
+     *
+     * @param item
+     * @returns {*}
+     */
     this.saveDipLayout = function (item) {
-      settings.get(function (err, config) {
-        if (err) {
-          return $log.log(err);
-        }
+      return settings.get()
+        .then(function (config) {
+          return getActiveWorkspace()
+            .then(function (activeWorkspace) {
+              var dipLayout = _.findWhere(activeWorkspace.workspace.dips, {id: item.id});
 
-        getActiveWorkspace(function (err, activeWorkspace) {
-          if (err) {
-            return console.log(err);
-          }
+              if (!dipLayout) {
+                dipLayout = gridItem.createLayoutFromItem(item);
+                activeWorkspace.workspace.dips.push(dipLayout);
+              } else {
+                dipLayout.layout = gridItem.getLayoutFromItem(item);
+              }
 
-          var dipLayout = _.findWhere(activeWorkspace.workspace.dips, {id: item.id});
+              config.workspaces[activeWorkspace.id] = activeWorkspace.workspace;
+              return settings.save(config)
+                .then(function () {
+                  emit('shell.workspaces.updated:' + activeWorkspace.id, null, true);
 
-          if (!dipLayout) {
-            dipLayout = gridItem.createLayoutFromItem(item);
-            activeWorkspace.workspace.dips.push(dipLayout);
-          } else {
-            dipLayout.layout =  gridItem.getLayoutFromItem(item);
-          }
+                  return $q.resolve();
+                });
+            });
+        });
+    };
 
-          config.workspaces[activeWorkspace.id] = activeWorkspace.workspace;
-          settings.save(config, function (err) {
-            if (err) {
-              $log.log(err);
-            }
-
-            emit('shell.workspaces.updated:' + activeWorkspace.id, null, true);
+    /**
+     *
+     * @returns {*}
+     */
+    this.getWorkspacesMeta = function () {
+      return settings.get()
+        .then(function (config) {
+          return _.mapValues(config.workspaces, function (workspace) {
+            return workspace.name;
           });
         });
-      });
     };
 
-    this.getWorkspacesMeta = function (callback) {
-      settings.get(function (err, config) {
-        if (err) {
-          callback(err);
-          return $log.log(err);
-        }
+    /**
+     *
+     * @returns {*}
+     */
+    this.getDips = function () {
+      return getActiveWorkspace()
+        .then(function (activeWorkspace) {
 
-        var meta = _.mapValues(config.workspaces, function (workspace) {
-          return workspace.name;
+          return getWorkspaceDips(activeWorkspace.workspace);
         });
-
-        callback(null, meta);
-      });
     };
 
-    this.getDips = function (callback) {
-      getActiveWorkspace(function (err, activeWorkspace) {
-        if (err) {
-          callback(err);
-          return $log.log(err);
-        }
-
-        getWorkspaceDips(activeWorkspace.workspace, callback);
-      });
-    };
-
+    /**
+     *
+     * @param id
+     * @returns {*}
+     */
     this.changeWorkspace = function (id) {
-      settings.get(function (err, config) {
-        if (err) {
-          return console.log(err);
-        }
+      return settings.get()
+        .then(function (config) {
+          var workspace = config.workspaces[id];
 
-        var workspace = config.workspaces[id];
-        if (!workspace) {
-          $log.error('No such workspace ' + id);
-        } else {
-          getActiveWorkspace(function (err, activeWorkspace) {
-            if (err) {
-              return console.log(err);
-            }
-
-            if (activeWorkspace.id != id) {
-              setActiveWorkspace(id);
-            }
-          });
-        }
-      });
+          if (!workspace) {
+            $log.error('No such workspace ' + id);
+          }
+          else {
+            return getActiveWorkspace()
+              .then(function (activeWorkspace) {
+                if (activeWorkspace.id != id) {
+                  return setActiveWorkspace(id);
+                }
+              });
+          }
+        });
     };
 
-    this.createWorkspace = function (name, cb) {
-      cb = cb || _.noop;
-
+    /**
+     *
+     * @param name
+     * @returns {$q.promise}
+     */
+    this.createWorkspace = function (name) {
       var id = uuid.v4();
 
       var newSettings = {
@@ -186,45 +188,46 @@ angular.module('shellApp')
         dips: []
       };
 
-      settings.set(newSettings, function (err) {
-        if (err) {
-          return cb(err);
-        }
+      return settings.set(newSettings)
+        .then(function () {
+          emit('shell.workspaces.created', id);
+          return setActiveWorkspace(id)
+            .then(function () {
 
-        emit('shell.workspaces.created', id);
-        setActiveWorkspace(id, function (err) {
-          if (err) {
-            return cb(err);
-          }
-
-          cb(null, { id: id, workspace: newSettings.workspaces[id] });
-        });
-      })
+              return {id: id, workspace: newSettings.workspaces[id]}
+            });
+        })
     };
 
+    /**
+     *
+     * @param cb
+     */
     this.onWorkspacesChanged = function (cb) {
       on('shell.workspaces.created', cb);
       on('shell.workspaces.updated', cb);
     };
 
+    /**
+     *
+     * @param cb
+     * @returns {*}
+     */
     this.onActiveChanged = function (cb) {
-      getActiveWorkspace(function (err, activeWorkspace) {
-        if (err) {
-          return console.log(err);
-        }
+      return getActiveWorkspace()
+        .then(function (activeWorkspace) {
+          var removeListener;
+          var last = activeWorkspace.id;
 
-        var removeListener;
-        var last = activeWorkspace.id;
+          var activeChanged = function (id) {
+            removeListener();
+            last = id;
+            removeListener = on('shell.workspaces.updated:' + id, cb);
+            cb();
+          };
 
-        var activeChanged = function (id) {
-          removeListener();
-          last = id;
-          removeListener = on('shell.workspaces.updated:' + id, cb);
-          cb();
-        };
-
-        removeListener = on('shell.workspaces.updated:' + activeWorkspace.id, cb);
-        on('shell.workspaces.active-changed', activeChanged);
-      });
+          removeListener = on('shell.workspaces.updated:' + activeWorkspace.id, cb);
+          on('shell.workspaces.active-changed', activeChanged);
+        });
     }
   });
