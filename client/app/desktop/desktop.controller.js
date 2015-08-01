@@ -88,7 +88,7 @@ angular.module('shellApp')
       };
 
       return {
-        require: require('relative-require')(dip.path),
+        require: require('relative-require')(dip.dir),
         dipApi: api
       };
     }

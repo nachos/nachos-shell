@@ -10,6 +10,7 @@ angular.module('shellApp')
       return {
         id: dipLayout.id,
         name: dipConfig.config.name,
+        dir: dipConfig.path,
         path: path.resolve(dipConfig.path, dipConfig.config.main),
         sizeX: dipLayout.layout.width,
         sizeY: dipLayout.layout.height,
