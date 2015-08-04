@@ -10,7 +10,13 @@
     <md-button ng-repeat="(id, workspace) in workspaces" ng-click="changeWorkspace(id)"> {{ workspace }} </md-button>
   </div>
   <div class="toolbar" layout="row">
-    <md-button ng-click="grid.toggleEditMode()">
+    <md-button class="md-icon-button">
+      {{batteryLevel}} bat
+    </md-button>
+    <md-button class="md-icon-button">
+      {{brightness}} bri
+    </md-button>
+    <md-button class="md-icon-button" ng-click="grid.toggleEditMode()">
       <i ng-hide="grid.editMode" class="mdi mdi-layers"></i>
       <i ng-show="grid.editMode" class="mdi mdi-layers-off"></i>
     </md-button>
