@@ -46,7 +46,7 @@
     "node-uuid": "^1.4.3",
     "q": "^1.4.1",
     "relative-require": "git://github.com/nachos/relative-require",
-    "vol": "git://github.com/gillstrom/vol"
+    "vol": "^2.1.1"
   },
   "engines": {
     "atom-shell": "0.30.1"
