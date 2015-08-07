@@ -13,8 +13,11 @@
     <md-button class="md-icon-button">
       {{batteryLevel}} bat
     </md-button>
-    <md-button class="md-icon-button">
-      {{brightness}} bri
+    <md-button class="md-icon-button" ng-click="setBrightness()">
+      <md-tooltip>
+        {{brightness * 100}}%
+      </md-tooltip>
+      <i class="mdi mdi-brightness-5"></i>
     </md-button>
     <md-button class="md-icon-button" ng-click="grid.toggleEditMode()">
       <i ng-hide="grid.editMode" class="mdi mdi-layers"></i>

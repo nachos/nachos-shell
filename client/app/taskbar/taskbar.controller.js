@@ -3,6 +3,7 @@
 angular.module('shellApp')
   .controller('TaskbarController', function ($scope, $interval, grid, workspaces, windows, $timeout) {
     var _ = require('lodash');
+    var path = require('path');
     var Q = require('q');
     var nachosApi = require('nachos-api');
     var client = nachosApi.server;
@@ -43,7 +44,7 @@ angular.module('shellApp')
       checkBattery();
     }, 10000);
 
-    var checkbrightness = function () {
+    var checkBrightness = function () {
       Q.nfcall(brightness.get)
         .then(function (bright) {
           $scope.brightness = bright;
@@ -53,11 +54,17 @@ angular.module('shellApp')
         });
     };
 
-    checkbrightness();
+    checkBrightness();
 
     $interval(function () {
-      checkbrightness();
+      checkBrightness();
     }, 300);
+
+    $scope.setBrightness = function () {
+      var jumps = 0.25;
+      var calc = ((parseInt($scope.brightness / jumps) + 1) % (1 / jumps + 1)) * jumps;
+      brightness.set(calc);
+    };
 
     workspaces.onWorkspacesChanged(function () {
       return updateWorkspaceMeta();

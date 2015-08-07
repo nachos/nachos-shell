@@ -1,4 +1,4 @@
-<div ng-controller="Desktop" layout="column" flex>
+<div ng-controller="Desktop" layout="column" flex ng-right-click="RightClickMenuCtrl.open($event)">
   <div gridster="grid.settings" flex>
     <div ng-repeat="dip in dips" gridster-item="dip" class="md-whiteframe-z1" >
       <div layout="row" layout-align="end" class="foreground" ng-show="grid.editMode" ng-class="{ enabled: grid.editMode }">

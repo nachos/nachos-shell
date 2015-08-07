@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('Desktop', function ($scope, $mdDialog, grid, workspaces, $timeout) {
+  .controller('Desktop', function ($scope, $mdDialog, grid, workspaces, $timeout, $mdMenu, $rootScope, $compile) {
     $scope.grid = grid;
 
     $scope.addDip = function (ev) {
@@ -71,7 +71,7 @@ angular.module('shellApp')
         },
         instance: function (instanceDefaults) {
           var instance = nachosApi.settings(dip.name)
-            .instance(dip.id, { instanceDefaults: instanceDefaults });
+            .instance(dip.id, {instanceDefaults: instanceDefaults});
 
           return {
             get: function () {
@@ -94,4 +94,54 @@ angular.module('shellApp')
     }
 
     renderDips();
+
+    $scope.hi = function (ev) {
+      $mdDialog.show(
+        $mdDialog.alert()
+          .parent(angular.element(document.body))
+          .title('This is an alert title')
+          .content('You can specify some description text in here.')
+          .ariaLabel('Alert Dialog Demo')
+          .ok('Got it!')
+          .targetEvent(ev)
+      );
+    };
+
+    var offset = { top: 0, left: 0};
+    var elem = angular.element('<div class="md-open-menu-container md-whiteframe-z2"><md-menu-content><md-menu-item><md-button ng-click="hi($event)"><span md-menu-align-target>Hello</span></md-button></md-menu-item></md-menu-content></div>');
+    $compile(elem)($scope);
+
+    $scope.RightClickMenuCtrl = {
+      open: function (event) {
+        offset = { top: event.offsetY, left: event.offsetX};
+        $mdMenu.show({
+          scope: $rootScope.$new(),
+          mdMenuCtrl: $scope.RightClickMenuCtrl,
+          element: elem,
+          target: event.target // used for where the menu animates out of
+        });
+      },
+      close: function () {
+        $mdMenu.hide();
+      },
+      positionMode: function () {
+        return {left: 'target', top: 'target'};
+      },
+      offsets: function () {
+        return offset;
+      }
+    }
+  });
+
+angular.module('shellApp')
+  .directive('ngRightClick', function ($parse) {
+    return function (scope, element, attrs) {
+      var fn = $parse(attrs.ngRightClick);
+      element.bind('contextmenu', function (event) {
+        scope.$apply(function () {
+          event.preventDefault();
+          fn(scope, {$event: event});
+        });
+      });
+    };
   });
