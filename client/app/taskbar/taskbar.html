@@ -19,6 +19,15 @@
       </md-tooltip>
       <i class="mdi mdi-brightness-5"></i>
     </md-button>
+    <md-button class="md-icon-button" ng-click="setVolume()">
+      <md-tooltip>
+        {{volume * 100}}%
+      </md-tooltip>
+      <i ng-show="volume >= 0.75" class="mdi mdi-volume-high"></i>
+      <i ng-show="volume < 0.75 && volume >= 0.5" class="mdi mdi-volume-medium"></i>
+      <i ng-show="volume < 0.5 && volume >= 0.25" class="mdi mdi-volume-low"></i>
+      <i ng-show="volume == 0" class="mdi mdi-volume-off"></i>
+    </md-button>
     <md-button class="md-icon-button" ng-click="grid.toggleEditMode()">
       <i ng-hide="grid.editMode" class="mdi mdi-layers"></i>
       <i ng-show="grid.editMode" class="mdi mdi-layers-off"></i>

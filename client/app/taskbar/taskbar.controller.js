@@ -12,6 +12,7 @@ angular.module('shellApp')
 
     var batteryLevel = require('battery-level');
     var brightness = require('brightness');
+    var vol = require('vol');
 
     $scope.date = Date.now();
     $interval(function () {
@@ -64,6 +65,28 @@ angular.module('shellApp')
       var jumps = 0.25;
       var calc = ((parseInt($scope.brightness / jumps) + 1) % (1 / jumps + 1)) * jumps;
       brightness.set(calc);
+    };
+
+    var checkVolume = function () {
+      Q.nfcall(vol.get)
+        .then(function (volume) {
+          $scope.volume = volume;
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+    };
+
+    checkVolume();
+
+    $interval(function () {
+      checkVolume();
+    }, 300);
+
+    $scope.setVolume = function () {
+      var jumps = 0.25;
+      var calc = ((parseInt($scope.volume / jumps) + 1) % (1 / jumps + 1)) * jumps;
+      vol.set(calc);
     };
 
     workspaces.onWorkspacesChanged(function () {
