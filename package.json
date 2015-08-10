@@ -46,10 +46,11 @@
     "node-uuid": "^1.4.3",
     "q": "^1.4.1",
     "require-relative": "^0.8.7",
-    "vol": "^2.1.1"
+    "vol": "^2.1.1",
+    "windowz": "git://github.com/nachos/windowz"
   },
   "engines": {
-    "atom-shell": "0.30.1"
+    "electron": "0.30.1"
   },
   "private": true
 }
