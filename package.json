@@ -45,7 +45,7 @@
     "nachos-packages": "^1.0.1",
     "node-uuid": "^1.4.3",
     "q": "^1.4.1",
-    "relative-require": "git://github.com/nachos/relative-require",
+    "require-relative": "^0.8.7",
     "vol": "^2.1.1"
   },
   "engines": {

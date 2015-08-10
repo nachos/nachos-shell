@@ -87,8 +87,12 @@ angular.module('shellApp')
         }
       };
 
+      var relative = require('require-relative');
+      
       return {
-        require: require('relative-require')(dip.dir),
+        require: function (pkg) {
+          return relative(pkg, dip.dir);
+        },
         dipApi: api
       };
     }
