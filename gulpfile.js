@@ -17,6 +17,7 @@ var gutil = require('gulp-util');
 var inject = require('gulp-inject');
 var less = require('gulp-less');
 var jshint = require('gulp-jshint');
+var runElectron = require("gulp-run-electron");
 
 /** Grab-bag of build configuration. */
 var config = {};
@@ -37,6 +38,7 @@ gulp.task('jshint', function () {
 gulp.task('serve', function (cb) {
   runSequence(
     'build',
+    'electorn',
     cb);
 });
 
@@ -138,3 +140,10 @@ gulp.task('clean:tmp', function (cb) {
 gulp.task('clean:dist', function (cb) {
   del(['dist'], cb);
 });
+
+gulp.task('electorn', function () {
+  return gulp.src('.')
+    .pipe(runElectron());
+});
+
+
