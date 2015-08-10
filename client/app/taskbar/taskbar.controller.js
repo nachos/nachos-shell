@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('TaskbarController', function ($scope, $interval, grid, workspaces, windows, $timeout) {
+  .controller('TaskbarController', function ($scope, $interval, grid, workspaces, windows) {
     var _ = require('lodash');
     var path = require('path');
     var Q = require('q');
     var nachosApi = require('nachos-api');
     var client = nachosApi.server;
     var remote = require('remote');
-    var windowsManager = remote.require('windows-manager');
+    var windowz = remote.require('windowz');
 
     var batteryLevel = require('battery-level');
     var brightness = require('brightness');
@@ -124,6 +124,6 @@ angular.module('shellApp')
     };
 
     $scope.windowClick = function (window) {
-      windowsManager.activate(window.handle);
+      windowz.activate(window.handle);
     };
   });

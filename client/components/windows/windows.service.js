@@ -2,11 +2,11 @@
 
 angular.module('shellApp')
   .service('windows', function () {
-    var windowsManager = require('windows-manager');
+    var windowz = require('windowz');
     var _ = require('lodash');
 
     var get = function() {
-      var windows = windowsManager.getAll();
+      var windows = windowz.getAll();
 
       //var processes = nativeApi.process.getAllProcesses().processes;
       //_.forEach(windows, function (window) {
