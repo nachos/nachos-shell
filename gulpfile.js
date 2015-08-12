@@ -38,7 +38,7 @@ gulp.task('jshint', function () {
 gulp.task('serve', function (cb) {
   runSequence(
     'build',
-    'electorn',
+    'electron',
     cb);
 });
 
@@ -141,7 +141,7 @@ gulp.task('clean:dist', function (cb) {
   del(['dist'], cb);
 });
 
-gulp.task('electorn', function () {
+gulp.task('electron', function () {
   return gulp.src('.')
     .pipe(runElectron());
 });
