@@ -87,9 +87,15 @@ angular.module('shellApp')
         }
       };
 
+      var remote = require('remote');
       var relative = require('require-relative');
-      
+
       return {
+        remote: {
+          require: function (pkg) {
+            return remote.require('./remote-require')(pkg, dip.dir);
+          }
+        },
         require: function (pkg) {
           return relative(pkg, dip.dir);
         },
