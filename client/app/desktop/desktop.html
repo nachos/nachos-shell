@@ -1,32 +1,59 @@
-<div ng-controller="Desktop" layout="column" flex ng-right-click="RightClickMenuCtrl.open($event)">
-  <div gridster="grid.settings" flex>
-    <div ng-repeat="dip in dips" gridster-item="dip" class="md-whiteframe-z1" >
-      <div layout="row" layout-align="end" class="foreground" ng-show="grid.editMode" ng-class="{ enabled: grid.editMode }">
-        <!--<i class="mdi mdi-delete" ng-click="deleteDip(dip)"></i>-->
-      </div>
-      <iframe-wrapper src="dip.path" content="dip.content" class="dip"></iframe-wrapper>
+<div ng-controller="Desktop" layout="column" flex
+     ng-right-click="RightClickMenuCtrl.open($event)">
+  <div>
+    <div ng-repeat="dock in docks" class="dock">
+      <iframe-wrapper src="dock.main" content="dock.content" layout-fill style="height: {{dock.layout.size + 'px'}}"></iframe-wrapper>
     </div>
   </div>
-  <div layout="row" layout-align="end" layout-padding>
-    <md-fab-speed-dial ng-show="grid.editMode" md-direction="up" class="md-scale md-fab-bottom-right">
-      <md-fab-trigger>
-        <md-button ng-show="grid.editMode" class="md-fab md-mini md-primary add-dip"
-                   ng-click="addDip($event)" aria-label="add-dip">
-          <i class="mdi mdi-plus"></i>
-          <md-tooltip md-direction="left">
-            <span>Add Dip</span>
-          </md-tooltip>
-        </md-button>
-      </md-fab-trigger>
-      <md-fab-actions  ng-show="grid.editMode">
-        <md-button aria-label="add-workspace" class="md-fab md-primary md-hue-2 md-mini"
-                   ng-click="addWorkspace($event)">
-          <i class="mdi mdi-arrange-bring-forward"></i>
-          <md-tooltip md-direction="left">
-            <span>New Workspace</span>
-          </md-tooltip>
-        </md-button>
-      </md-fab-actions>
-    </md-fab-speed-dial>
+  <div layout="row" flex>
+    <div layout="row">
+      <div ng-repeat="dock in docks" layout="column" class="dock">
+        <iframe-wrapper flex src="dock.main" content="dock.content" layout-fill style="width: {{dock.layout.size + 'px'}}"></iframe-wrapper>
+      </div>
+    </div>
+    <div layout="column" flex>
+      <div gridster="grid.settings" flex>
+        <div ng-repeat="widget in widgets" data-widget-id="{{widget.id}}" gridster-item="widget.layout"
+             class="md-whiteframe-z1">
+          <div layout="row" layout-align="end" class="foreground" ng-show="grid.editMode"
+               ng-class="{ enabled: grid.editMode }">
+            <!--<i class="mdi mdi-delete" ng-click="deleteDip(dip)"></i>-->
+          </div>
+          <iframe-wrapper src="widget.main" content="widget.content" class="dip"></iframe-wrapper>
+        </div>
+      </div>
+      <div layout="row" layout-align="end" layout-padding>
+        <md-fab-speed-dial ng-show="grid.editMode" md-direction="up" class="md-scale md-fab-bottom-right">
+          <md-fab-trigger>
+            <md-button ng-show="grid.editMode" class="md-fab md-mini md-primary add-dip"
+                       ng-click="addDip($event)" aria-label="add-dip">
+              <i class="mdi mdi-plus"></i>
+              <md-tooltip md-direction="left">
+                <span>Add Dip</span>
+              </md-tooltip>
+            </md-button>
+          </md-fab-trigger>
+          <md-fab-actions ng-show="grid.editMode">
+            <md-button aria-label="add-workspace" class="md-fab md-primary md-hue-2 md-mini"
+                       ng-click="addWorkspace($event)">
+              <i class="mdi mdi-arrange-bring-forward"></i>
+              <md-tooltip md-direction="left">
+                <span>New Workspace</span>
+              </md-tooltip>
+            </md-button>
+          </md-fab-actions>
+        </md-fab-speed-dial>
+      </div>
+    </div>
+    <div layout="row">
+      <div ng-repeat="dock in docks" layout="column" class="dock">
+        <iframe-wrapper flex src="dock.main" content="dock.content" layout-fill style="width: {{dock.layout.size + 'px'}}"></iframe-wrapper>
+      </div>
+    </div>
+  </div>
+  <div layout="column">
+    <div ng-repeat="dock in docks" class="dock">
+      <iframe-wrapper src="dock.main" content="dock.content" layout-fill style="height: {{dock.layout.size + 'px'}}"></iframe-wrapper>
+    </div>
   </div>
 </div>

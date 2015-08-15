@@ -2,38 +2,23 @@
 
 angular.module('shellApp')
   .service('gridItem', function() {
-    var path = require('path');
+    this.convertToItem = function (layout) {
+      layout = layout || {};
 
-    var self = this;
-
-    this.createItem = function (dipConfig, dipLayout) {
       return {
-        id: dipLayout.id,
-        name: dipConfig.config.name,
-        dir: dipConfig.path,
-        path: path.resolve(dipConfig.path, dipConfig.config.main),
-        sizeX: dipLayout.layout.width,
-        sizeY: dipLayout.layout.height,
-        row: dipLayout.layout.y,
-        col: dipLayout.layout.x
+        sizeX: layout.width,
+        sizeY: layout.height,
+        row: layout.y,
+        col: layout.x
       };
     };
 
-    this.createLayoutFromItem = function (gridItem) {
+    this.convertToLayout = function (itemLayout) {
       return {
-        id: gridItem.id,
-        path: gridItem.path,
-        name: gridItem.name,
-        layout: self.getLayoutFromItem(gridItem)
+        width: itemLayout.sizeX,
+        height: itemLayout.sizeY,
+        y: itemLayout.row,
+        x: itemLayout.col
       };
-    };
-
-    this.getLayoutFromItem = function (gridItem) {
-      return {
-        width: gridItem.sizeX,
-        height: gridItem.sizeY,
-        y: gridItem.row,
-        x: gridItem.col
-      }
-    };
+    }
   });

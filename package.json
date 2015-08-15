@@ -43,7 +43,7 @@
     "gulp-exec": "^2.1.1",
     "lodash": "^3.10.0",
     "moment": "^2.10.6",
-    "nachos-api": "^1.0.0",
+    "nachos-api": "^1.0.1",
     "nachos-packages": "^1.0.1",
     "node-uuid": "^1.4.3",
     "q": "^1.4.1",

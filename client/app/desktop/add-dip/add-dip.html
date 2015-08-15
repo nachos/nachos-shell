@@ -1,8 +1,8 @@
 <md-dialog flex="30">
   <div layout="column">
-    <div ng-repeat="widget in widgets">
-      <md-button ng-click="add(widget)">{{ widget.name }}</md-button>
+    <div ng-repeat="dip in dips">
+      <md-button ng-click="add(dip)">{{ dip.name }}</md-button>
     </div>
-    <span ng-if="!widgets.length">no dips</span>
+    <span ng-if="!dips.length">no dips</span>
   </div>
 </md-dialog>

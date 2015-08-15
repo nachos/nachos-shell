@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('shellApp')
-  .controller('Desktop', function ($scope, $mdDialog, grid, workspaces, $timeout, $mdMenu, $rootScope, $compile) {
+  .controller('Desktop', function ($scope, $mdDialog, grid, workspaces, $timeout, $mdMenu, $rootScope, $compile, dips) {
+    var _ = require('lodash');
+
     $scope.grid = grid;
 
     $scope.addDip = function (ev) {
@@ -10,10 +12,20 @@ angular.module('shellApp')
         templateUrl: 'app/desktop/add-dip/add-dip.html',
         targetEvent: ev
       })
-        .then(function (dip) {
-          dip.content = getIframeContent(dip);
-          $scope.dips.push(dip);
-          workspaces.saveDipLayout(dip);
+        .then(function (dipConfig) {
+          dips.addDip(dipConfig)
+            .then(function (newDip) {
+              newDip.content = getIframeContent(newDip);
+
+              $timeout(function () {
+                if (newDip.type === 'widget') {
+                  $scope.widgets.push(newDip);
+                }
+                else {
+                  $scope.docks.push(newDip);
+                }
+              });
+            });
         });
     };
 
@@ -33,14 +45,22 @@ angular.module('shellApp')
     });
 
     function renderDips() {
-      return workspaces.getDips()
+      return dips.getCurrent()
         .then(function (dips) {
-          dips.forEach(function (dip) {
+          dips.widgets.forEach(function (dip) {
+            dip.content = getIframeContent(dip);
+          });
+
+          dips.docks.forEach(function (dip) {
             dip.content = getIframeContent(dip);
           });
 
           $timeout(function () {
-            $scope.dips = dips;
+            $scope.widgets = dips.widgets;
+          });
+
+          $timeout(function () {
+            $scope.docks = dips.docks;
           });
         })
         .catch(function (err) {
@@ -93,11 +113,11 @@ angular.module('shellApp')
       return {
         remote: {
           require: function (pkg) {
-            return remote.require('./remote-require')(pkg, dip.dir);
+            return remote.require('./remote-require')(pkg, dip.path);
           }
         },
         require: function (pkg) {
-          return relative(pkg, dip.dir);
+          return relative(pkg, dip.path);
         },
         dipApi: api
       };
@@ -117,13 +137,17 @@ angular.module('shellApp')
       );
     };
 
-    var offset = { top: 0, left: 0};
-    var elem = angular.element('<div class="md-open-menu-container md-whiteframe-z2"><md-menu-content><md-menu-item><md-button ng-click="hi($event)"><span md-menu-align-target>Hello</span></md-button></md-menu-item></md-menu-content></div>');
+    $scope.toggleEditMode = function () {
+      grid.toggleEditMode();
+    };
+
+    var offset = {top: 0, left: 0};
+    var elem = angular.element('<div class="md-open-menu-container md-whiteframe-z2"><md-menu-content><md-menu-item><md-button ng-click="toggleEditMode()"><span md-menu-align-target>Toggle Edit Mode</span></md-button></md-menu-item><md-menu-item><md-button ng-click="hi($event)"><span md-menu-align-target>Hello</span></md-button></md-menu-item></md-menu-content></div>');
     $compile(elem)($scope);
 
     $scope.RightClickMenuCtrl = {
       open: function (event) {
-        offset = { top: event.offsetY, left: event.offsetX};
+        offset = {top: event.offsetY, left: event.offsetX};
         $mdMenu.show({
           scope: $rootScope.$new(),
           mdMenuCtrl: $scope.RightClickMenuCtrl,

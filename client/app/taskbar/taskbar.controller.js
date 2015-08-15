@@ -27,7 +27,7 @@ angular.module('shellApp')
 
     $scope.windows = windows.getAll();
 
-    var checkBattery = function () {
+    /*var checkBattery = function () {
       Q.nfcall(batteryLevel)
         .then(function (batteryLevel) {
           $scope.batteryLevel = batteryLevel;
@@ -87,7 +87,7 @@ angular.module('shellApp')
       var jumps = 0.25;
       var calc = ((parseInt($scope.volume / jumps) + 1) % (1 / jumps + 1)) * jumps;
       vol.set(calc);
-    };
+    };*/
 
     workspaces.onWorkspacesChanged(function () {
       return updateWorkspaceMeta();

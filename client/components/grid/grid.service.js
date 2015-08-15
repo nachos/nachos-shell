@@ -1,11 +1,22 @@
 'use strict';
 
 angular.module('shellApp')
-  .service('grid', function(workspaces) {
+  .run(function (grid, $timeout) {
+    var nachosApi = require('nachos-api');
+
+    nachosApi.on('shell:toggleEditMode', function () {
+      $timeout(function () {
+        grid.toggleEditMode();
+      });
+    });
+  })
+  .service('grid', function(dips) {
+    var nachosApi = require('nachos-api');
     var self = this;
 
     var itemChanged = function (event, $element, dip) {
-      workspaces.saveDipLayout(dip);
+      var id = $element.attr('data-widget-id');
+      dips.saveWidgetLayout(id, dip);
     };
 
     this.settings = {
@@ -32,5 +43,6 @@ angular.module('shellApp')
     this.toggleEditMode = function(){
       self.editMode = !self.editMode;
       self.settings.resizable.enabled = self.settings.draggable.enabled = self.editMode;
+      nachosApi.emit('shell:editModeChanged', self.editMode);
     };
   });
