@@ -7,6 +7,7 @@ angular.module('shellApp')
     var uuid = require('node-uuid');
     var packages = require('nachos-packages');
     var Q = require('Q');
+    var nachosApi = require('nachos-api');
 
     var getWorkspaceDips = function (workspace) {
       var allPromise = Q.all(_.map(workspace.dips, function (dipLayout) {
@@ -67,6 +68,22 @@ angular.module('shellApp')
                 type: dipConfig.config.layout,
                 layout: defaultLayout
               };
+            });
+        });
+    };
+
+    this.deleteDip = function (dip) {
+      return workspaces.getActiveWorkspace()
+        .then(function (workspace) {
+          workspace.dips = _.filter(workspace.dips, function (workspaceDip) {
+            return workspaceDip.id !== dip.id;
+          });
+
+          return workspaces.saveWorkspace(workspace)
+            .then(function () {
+              return nachosApi.settings(dip.name)
+                .instance(dip.id)
+                .delete();
             });
         });
     };

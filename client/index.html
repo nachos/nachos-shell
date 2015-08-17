@@ -17,6 +17,7 @@
 <div class="desktop" layout="column" flex>
   <ng-include src="'app/desktop/desktop.html'" layout="column" flex></ng-include>
 </div>
+<ng-include src="'app/taskbar/taskbar.html'"></ng-include>
 
 <!-- bower:js -->
 <script src="bower_components/angular/angular.js"></script>
@@ -32,14 +33,14 @@
 <!-- endbower -->
 <script src="app/app.js"></script>
 <!-- injector:js -->
+<script src="app/desktop/desktop.controller.js"></script>
+<script src="app/taskbar/taskbar.controller.js"></script>
 <script src="components/dips/dips.service.js"></script>
 <script src="components/grid/grid-item.service.js"></script>
 <script src="components/grid/grid.service.js"></script>
 <script src="components/settings/settings.service.js"></script>
 <script src="components/windows/windows.service.js"></script>
 <script src="components/workspaces/workspaces.service.js"></script>
-<script src="app/desktop/desktop.controller.js"></script>
-<script src="app/taskbar/taskbar.controller.js"></script>
 <script src="app/desktop/add-dip/add-dip.controller.js"></script>
 <script src="app/desktop/add-workspace/add-workspace.controller.js"></script>
 <!-- endinjector -->

@@ -5,6 +5,8 @@ angular.module('shellApp')
     var _ = require('lodash');
 
     $scope.grid = grid;
+    $scope.widgets = [];
+    $scope.docks = [];
 
     $scope.addDip = function (ev) {
       $mdDialog.show({
@@ -26,6 +28,14 @@ angular.module('shellApp')
                 }
               });
             });
+        });
+    };
+
+    $scope.deleteDip = function (dip) {
+      dips.deleteDip(dip)
+        .then(function () {
+          var index = $scope.widgets.indexOf(dip);
+          $scope.widgets.splice(index, 1);
         });
     };
 
@@ -125,24 +135,24 @@ angular.module('shellApp')
 
     renderDips();
 
-    $scope.hi = function (ev) {
-      $mdDialog.show(
-        $mdDialog.alert()
-          .parent(angular.element(document.body))
-          .title('This is an alert title')
-          .content('You can specify some description text in here.')
-          .ariaLabel('Alert Dialog Demo')
-          .ok('Got it!')
-          .targetEvent(ev)
-      );
-    };
-
     $scope.toggleEditMode = function () {
       grid.toggleEditMode();
     };
 
     var offset = {top: 0, left: 0};
-    var elem = angular.element('<div class="md-open-menu-container md-whiteframe-z2"><md-menu-content><md-menu-item><md-button ng-click="toggleEditMode()"><span md-menu-align-target>Toggle Edit Mode</span></md-button></md-menu-item><md-menu-item><md-button ng-click="hi($event)"><span md-menu-align-target>Hello</span></md-button></md-menu-item></md-menu-content></div>');
+    var elem = angular.element('<div class="md-open-menu-container md-whiteframe-z2">' +
+      '<md-menu-content><md-menu-item>' +
+      '<md-button ng-click="toggleEditMode()">' +
+      '<span md-menu-align-target>Toggle Edit Mode</span>' +
+      '</md-button>' +
+      '</md-menu-item>' +
+      '<md-menu-item>' +
+      '<md-button ng-click="addDip($event)">' +
+      '<span md-menu-align-target>Add dip</span>' +
+      '</md-button>' +
+      '</md-menu-item>' +
+      '</md-menu-content>' +
+      '</div>');
     $compile(elem)($scope);
 
     $scope.RightClickMenuCtrl = {

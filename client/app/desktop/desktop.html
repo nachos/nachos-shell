@@ -17,7 +17,16 @@
              class="md-whiteframe-z1">
           <div layout="row" layout-align="end" class="foreground" ng-show="grid.editMode"
                ng-class="{ enabled: grid.editMode }">
-            <!--<i class="mdi mdi-delete" ng-click="deleteDip(dip)"></i>-->
+          </div>
+          <div layout="row" class="header" ng-show="grid.editMode" ng-class="{ enabled: grid.editMode }">
+            <div flex class="drag">
+              <md-button class="md-icon-button">
+                <i class="mdi mdi-cursor-move"></i>
+              </md-button>
+            </div>
+            <md-button class="md-icon-button" ng-click="deleteDip(widget)">
+              <i class="mdi mdi-delete"></i>
+            </md-button>
           </div>
           <iframe-wrapper src="widget.main" content="widget.content" class="dip"></iframe-wrapper>
         </div>

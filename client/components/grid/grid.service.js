@@ -10,7 +10,7 @@ angular.module('shellApp')
       });
     });
   })
-  .service('grid', function(dips) {
+  .service('grid', function (dips) {
     var nachosApi = require('nachos-api');
     var self = this;
 
@@ -29,6 +29,7 @@ angular.module('shellApp')
       minSizeY: 5,
       draggable: {
         enabled: false,
+        handle: '.drag',
         stop: itemChanged
       },
       resizable: {
@@ -40,7 +41,7 @@ angular.module('shellApp')
 
     this.editMode = false;
 
-    this.toggleEditMode = function(){
+    this.toggleEditMode = function () {
       self.editMode = !self.editMode;
       self.settings.resizable.enabled = self.settings.draggable.enabled = self.editMode;
       nachosApi.emit('shell:editModeChanged', self.editMode);
