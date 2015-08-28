@@ -44,6 +44,7 @@
     "lodash": "^3.10.1",
     "moment": "^2.10.6",
     "nachos-api": "^1.0.1",
+    "nachos-open": "^0.1.0",
     "nachos-packages": "^1.1.0",
     "node-uuid": "^1.4.3",
     "q": "^1.4.1",

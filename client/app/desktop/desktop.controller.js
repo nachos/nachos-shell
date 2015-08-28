@@ -3,6 +3,7 @@
 angular.module('shellApp')
   .controller('Desktop', function ($scope, $mdDialog, grid, workspaces, $timeout, $mdMenu, $rootScope, $compile, dips) {
     var _ = require('lodash');
+    var nachosOpen = require('nachos-open');
 
     $scope.grid = grid;
     $scope.widgets = [];
@@ -29,6 +30,10 @@ angular.module('shellApp')
               });
             });
         });
+    };
+
+    $scope.openDipSettings = function (dip) {
+      nachosOpen('settings', [dip.name]);
     };
 
     $scope.deleteDip = function (dip) {
