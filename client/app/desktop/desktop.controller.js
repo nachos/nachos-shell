@@ -87,39 +87,42 @@ angular.module('shellApp')
       var nachosApi = require('nachos-api');
 
       var api = {
-        global: function (globalDefaults) {
-          var settings = nachosApi.settings(dip.name, {
-            globalDefaults: globalDefaults
-          });
+        settings: {
+          global: function (globalDefaults) {
+            var settings = nachosApi.settings(dip.name, {
+              globalDefaults: globalDefaults
+            });
 
-          return {
-            get: function () {
-              return settings.get();
-            },
-            save: function (config) {
-              return settings.save(config);
-            },
-            onChange: function (callback) {
-              settings.onChange(callback);
-            }
-          };
+            return {
+              get: function () {
+                return settings.get();
+              },
+              save: function (config) {
+                return settings.save(config);
+              },
+              onChange: function (callback) {
+                settings.onChange(callback);
+              }
+            };
+          },
+          instance: function (instanceDefaults) {
+            var instance = nachosApi.settings(dip.name)
+              .instance(dip.id, {instanceDefaults: instanceDefaults});
+
+            return {
+              get: function () {
+                return instance.get();
+              },
+              save: function (config) {
+                return instance.save(config);
+              },
+              onChange: function (callback) {
+                instance.onChange(callback);
+              }
+            };
+          }
         },
-        instance: function (instanceDefaults) {
-          var instance = nachosApi.settings(dip.name)
-            .instance(dip.id, {instanceDefaults: instanceDefaults});
-
-          return {
-            get: function () {
-              return instance.get();
-            },
-            save: function (config) {
-              return instance.save(config);
-            },
-            onChange: function (callback) {
-              instance.onChange(callback);
-            }
-          };
-        }
+        system: nachosApi.system
       };
 
       var remote = require('remote');
