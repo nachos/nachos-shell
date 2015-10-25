@@ -1,6 +1,5 @@
 {
   "name": "shell",
   "version": "0.0.0",
-  "type": "taco",
-  "private": true
+  "type": "taco"
 }
