@@ -18,6 +18,7 @@ var inject = require('gulp-inject');
 var less = require('gulp-less');
 var jshint = require('gulp-jshint');
 var runElectron = require("gulp-run-electron");
+var nachosBuild = require("gulp-nachos-build");
 
 /** Grab-bag of build configuration. */
 var config = {};
@@ -56,6 +57,18 @@ gulp.task('build', function (cb) {
     'inject:js',
     'wiredep',
     cb);
+});
+
+gulp.task('build:dist', function (cb) {
+  runSequence(
+    'lint',
+    'build',
+    'electron:build',
+    cb);
+});
+
+gulp.task('electron:build', function (cb) {
+  nachosBuild(cb);
 });
 
 gulp.task('wiredep', function () {
